@@ -9,7 +9,7 @@ import { FAQSection } from "@/components/home/FAQSection"
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div>
       <NavbarSection />
       <main>
         <HeroSection />
