@@ -1,42 +1,120 @@
+import heroBg from "@/assets/images/home-page/hero-background.webp"
+
 export function HeroSection() {
   return (
-    <section>
-      <div className="bg-contain bg-center bg-no-repeat bg-[url('https://assets.website-files.com/6458c625291a94a195e6cf3a/64b6f0467e818a18c75b6fa0_Group%2048105.svg')]">
-        {/* Container */}
-        <div className="mx-auto w-full max-w-7xl px-5 py-12 md:px-10 md:py-16 lg:py-20">
-          {/* Component */}
-          <div className="flex min-h-screen flex-col justify-center mx-auto w-full max-w-3xl py-12 md:py-16 lg:py-20 gap-10">
-            {/* Title */}
-            <div className="flex flex-col items-center gap-y-5">
-              <h1 className="text-center text-4xl font-bold md:text-6xl">
-                Savor the Flavors of Culinary Excellence
-              </h1>
-              <p className="text-center text-gray-500 max-w-lg text-sm sm:text-base">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit ut
-                aliquampurus sit amet luctus venenatis, lectus
-              </p>
-            </div>
-            {/* Buttons */}
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="#"
-                className="inline-block rounded-md bg-black px-6 py-3 text-center font-semibold text-white"
-              >
-                Get more customer
-              </a>
-              <a
-                href="#"
-                className="flex rounded-md items-center border border-solid border-black px-6 py-3 font-bold text-black"
-              >
-                <img
-                  src="https://assets.website-files.com/6458c625291a94a195e6cf3a/6458c625291a944888e6cf97_PlayCircle%20(1).svg"
-                  alt=""
-                  className="mr-2 inline-block max-h-4 w-5"
-                />
-                <p className="text-sm sm:text-base">Watch free demo</p>
-              </a>
+    <section className="relative overflow-hidden">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('${heroBg.src}')` }}
+      >
+        {/* Subtle overlay for better text readability */}
+        <div className="absolute inset-0 bg-linear-to-b from-white/70 via-white/50 to-white/70"></div>
+      </div>
+
+      {/* Content Container */}
+      <div className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-32 lg:py-40">
+        {/* Hero Content */}
+        <div className="flex min-h-[85vh] flex-col justify-center mx-auto w-full max-w-4xl gap-8 md:gap-12">
+          {/* Badge */}
+          <div className="flex justify-center animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm px-5 py-2.5 shadow-lg border border-gray-200/50">
+              <div className="h-2 w-2 rounded-full bg-primary animate-pulse"></div>
+              <span className="text-sm font-medium text-foreground tracking-wide">
+                Premium Interior Design
+              </span>
             </div>
           </div>
+
+          {/* Main Headline */}
+          <div className="flex flex-col items-center gap-y-6 animate-fade-in-up animation-delay-200">
+            <h1 className="text-center font-headline text-5xl font-bold leading-tight text-foreground md:text-7xl lg:text-8xl">
+              Transform Your
+              <span className="block mt-2 bg-linear-to-r from-gray-800 via-gray-900 to-black bg-clip-text text-transparent">
+                Living Space
+              </span>
+            </h1>
+            <p className="text-center font-body text-muted-foreground max-w-2xl text-base md:text-lg lg:text-xl leading-relaxed">
+              Elevate your home with bespoke interior design solutions that
+              blend timeless elegance with modern sophistication. We create
+              spaces that inspire.
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 animate-fade-in-up animation-delay-400">
+            <a
+              href="#"
+              className="group relative inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl md:px-10 md:py-5 md:text-lg overflow-hidden"
+            >
+              <span className="relative z-10">Start Your Project</span>
+              <div className="absolute inset-0 bg-linear-to-r from-gray-900 to-black opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+            </a>
+
+            <a
+              href="#"
+              className="group inline-flex items-center justify-center gap-3 rounded-xl border-2 border-foreground/20 bg-white/80 backdrop-blur-sm px-8 py-4 text-base font-semibold text-foreground shadow-lg transition-all duration-300 hover:border-foreground hover:bg-white hover:shadow-xl md:px-10 md:py-5 md:text-lg"
+            >
+              <svg
+                className="h-5 w-5 transition-transform duration-300 group-hover:scale-110"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+              </svg>
+              <span>View Portfolio</span>
+            </a>
+          </div>
+
+          {/* Stats/Trust Indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 pt-8 animate-fade-in-up animation-delay-600">
+            <div className="flex flex-col items-center gap-1">
+              <p className="font-headline text-3xl md:text-4xl font-bold text-foreground">
+                500+
+              </p>
+              <p className="font-body text-sm text-muted-foreground">
+                Projects Completed
+              </p>
+            </div>
+            <div className="h-12 w-px bg-border"></div>
+            <div className="flex flex-col items-center gap-1">
+              <p className="font-headline text-3xl md:text-4xl font-bold text-foreground">
+                15+
+              </p>
+              <p className="font-body text-sm text-muted-foreground">
+                Years Experience
+              </p>
+            </div>
+            <div className="h-12 w-px bg-border"></div>
+            <div className="flex flex-col items-center gap-1">
+              <p className="font-headline text-3xl md:text-4xl font-bold text-foreground">
+                98%
+              </p>
+              <p className="font-body text-sm text-muted-foreground">
+                Client Satisfaction
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            Scroll to explore
+          </p>
+          <svg
+            className="h-6 w-6 text-muted-foreground"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
         </div>
       </div>
     </section>
