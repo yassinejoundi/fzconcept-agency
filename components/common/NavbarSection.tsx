@@ -97,11 +97,7 @@ export function NavbarSection() {
                     <NavigationMenuLink asChild>
                       <Link
                         href={section.href}
-                        className={`group relative px-4 py-2 text-sm font-medium font-sans transition-colors hover:text-gold ${
-                          scrolled
-                            ? "text-foreground hover:text-gold"
-                            : "text-foreground hover:text-gold"
-                        }`}
+                        className="group relative px-4 py-2 text-sm font-medium font-sans transition-colors text-foreground hover:text-gold hover:bg-transparent"
                       >
                         {section.title}
                         <span className="absolute inset-x-0 bottom-0 h-0.5 scale-x-0 bg-gold transition-transform duration-300 group-hover:scale-x-100" />
@@ -111,12 +107,6 @@ export function NavbarSection() {
                 ))}
               </NavigationMenuList>
             </NavigationMenu>
-            <Button
-              asChild
-              className="ml-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20"
-            >
-              <Link href="/contact">{CTA_BUTTON_TEXT}</Link>
-            </Button>
           </motion.div>
 
           {/* Desktop CTA Button */}
@@ -127,13 +117,7 @@ export function NavbarSection() {
             className="hidden md:flex items-center"
           >
             <Link href="/contact">
-              <Button
-                className={`rounded-xl px-6 py-2 font-bold font-body transition-all duration-300 ${
-                  scrolled
-                    ? "bg-sage text-background hover:bg-sage/90"
-                    : "bg-white text-foreground hover:bg-white/90"
-                }`}
-              >
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                 {CTA_BUTTON_TEXT}
               </Button>
             </Link>
@@ -143,11 +127,7 @@ export function NavbarSection() {
           <div className="md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={scrolled ? "text-foreground" : "text-white"}
-                >
+                <Button variant="ghost" size="icon" className="text-foreground">
                   <MenuIcon />
                 </Button>
               </SheetTrigger>
@@ -173,7 +153,7 @@ export function NavbarSection() {
                   {/* Mobile CTA Button */}
                   <div className="pt-4">
                     <Link href="/contact">
-                      <Button className="w-full bg-sage hover:bg-sage/90 text-background font-body rounded-xl py-6">
+                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
                         {CTA_BUTTON_TEXT}
                       </Button>
                     </Link>

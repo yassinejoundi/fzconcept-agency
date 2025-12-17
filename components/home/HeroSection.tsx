@@ -15,7 +15,7 @@ export function HeroSection() {
       </div>
 
       {/* Content Container */}
-      <div className="relative mx-auto w-full max-w-7xl px-6 py-20 md:px-10 md:py-32 lg:py-40">
+      <div className="relative mx-auto w-full max-w-7xl px-6 py-18 md:px-10 md:py-24 lg:py-28">
         {/* Hero Content */}
         <div className="flex min-h-[85vh] flex-col justify-center mx-auto w-full max-w-4xl gap-8 md:gap-12">
           {/* Badge */}
@@ -29,7 +29,7 @@ export function HeroSection() {
           </div>
 
           {/* Main Headline */}
-          <div className="flex flex-col items-center gap-y-6 animate-fade-in-up animation-delay-200">
+          <div className="flex flex-col items-center gap-y-3 animate-fade-in-up animation-delay-200">
             <h1 className="text-center font-serif text-5xl font-bold leading-tight text-foreground md:text-7xl lg:text-8xl">
               Transform Your
               <span className="block mt-2 bg-gradient-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-4">
@@ -76,7 +76,7 @@ export function HeroSection() {
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 pt-8 animate-fade-in-up animation-delay-600">
             <div className="flex flex-col items-center gap-1">
               <p className="font-serif text-3xl md:text-4xl font-bold text-primary">
-                500+
+                50+
               </p>
               <p className="font-sans text-sm text-muted-foreground">
                 Projects Completed
@@ -85,7 +85,7 @@ export function HeroSection() {
             <div className="h-12 w-px bg-border"></div>
             <div className="flex flex-col items-center gap-1">
               <p className="font-serif text-3xl md:text-4xl font-bold text-primary">
-                15+
+                5+
               </p>
               <p className="font-sans text-sm text-muted-foreground">
                 Years Experience
@@ -101,26 +101,6 @@ export function HeroSection() {
               </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-            Scroll to explore
-          </p>
-          <svg
-            className="h-6 w-6 text-muted-foreground"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-          </svg>
         </div>
       </div>
     </section>

@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "FZConcept Agency",
 }
 
+import { Footer } from "@/components/common/Footer"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,6 +32,7 @@ export default function RootLayout({
         className={`${fraunces.variable} ${merriweatherSans.variable} antialiased`}
       >
         {children}
+        <Footer />
       </body>
     </html>
   )

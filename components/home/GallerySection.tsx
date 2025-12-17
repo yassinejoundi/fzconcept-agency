@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import {
   Carousel,
   CarouselContent,
@@ -73,10 +74,12 @@ export function GallerySection() {
                   className="pl-4 md:basis-1/2 lg:basis-1/3"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl group">
-                    <img
+                    <Image
                       src={src}
                       alt={`Interior Design Project ${index + 1}`}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   </div>

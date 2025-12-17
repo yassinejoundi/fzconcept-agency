@@ -1,4 +1,29 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
+
 export function FAQSection() {
+  const faqs = [
+    {
+      question: "What makes FZ Concept unique?",
+      answer:
+        "We blend traditional Moroccan aesthetics with modern luxury, creating unique spaces that tell a story.",
+    },
+    {
+      question: "Do you offer online consultations?",
+      answer:
+        "Yes, we offer virtual design consultations for clients worldwide.",
+    },
+    {
+      question: "How long does a project take?",
+      answer:
+        "Timelines vary by project scope, but typically range from 4-12 weeks for full room designs.",
+    },
+  ]
+
   return (
     <section className="bg-background">
       {/* Container */}
@@ -9,41 +34,33 @@ export function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="font-sans mt-4 max-w-xl px-5 text-center text-base font-light text-muted-foreground md:max-w-lg">
-            Everything you need to know about our interior design process and services.
+            Everything you need to know about our interior design process and
+            services.
           </p>
         </div>
         {/* FAQs */}
-        <div className="mt-10 flex flex-col justify-between md:flex-row md:flex-wrap">
-          {/* FAQ CONTAINER LEFT */}
-          <div className="mx-4 flex max-w-3xl flex-col md:shrink md:grow md:basis-96 c-md-basis-96 gap-6">
-            {/* FAQ BLOCK */}
-            <div className="relative w-full rounded-xl border border-border bg-card p-8 shadow-sm transition-all hover:shadow-md">
-              <h2 className="font-bold text-foreground text-xl font-serif">
-                What makes FZ Concept unique?
-              </h2>
-              <p className="font-sans mt-4 text-base font-light text-muted-foreground">
-                We blend traditional Moroccan aesthetics with modern luxury, creating unique spaces that tell a story.
-              </p>
-            </div>
-            {/* FAQ BLOCK */}
-            <div className="relative w-full rounded-xl border border-border bg-card p-8 shadow-sm transition-all hover:shadow-md">
-              <h2 className="font-bold text-foreground text-xl font-serif">
-                Do you offer online consultations?
-              </h2>
-              <p className="font-sans mt-4 text-base font-light text-muted-foreground">
-                Yes, we offer virtual design consultations for clients worldwide.
-              </p>
-            </div>
-            {/* FAQ BLOCK */}
-            <div className="relative w-full rounded-xl border border-border bg-card p-8 shadow-sm transition-all hover:shadow-md">
-              <h2 className="font-bold text-foreground text-xl font-serif">
-                How long does a project take?
-              </h2>
-              <p className="font-sans mt-4 text-base font-light text-muted-foreground">
-                Timelines vary by project scope, but typically range from 4-12 weeks for full room designs.
-              </p>
-            </div>
-          </div>
+        <div className="mt-10 mx-auto max-w-3xl">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="item-0"
+            className="w-full space-y-4"
+          >
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="border border-border bg-card rounded-xl px-6 shadow-sm transition-all hover:shadow-md"
+              >
+                <AccordionTrigger className="text-xl font-serif font-bold text-foreground hover:no-underline hover:text-primary transition-colors">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-base font-sans font-light text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>
