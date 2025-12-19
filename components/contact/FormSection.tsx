@@ -41,7 +41,7 @@ export function FormSection() {
                     Marrakech, Morocco
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
-                    Available across Morocco & internationally
+                    Available across Morocco
                   </p>
                 </div>
               </div>
