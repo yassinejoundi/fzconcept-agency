@@ -1,5 +1,4 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
 import { NavbarSection } from "@/components/common/NavbarSection"
 import { HeroSection } from "@/components/contact/HeroSection"

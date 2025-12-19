@@ -4,6 +4,7 @@ import * as React from "react"
 import { Mail, MapPin, Phone } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export function FormSection() {
   const [submitted, setSubmitted] = React.useState(false)
@@ -160,8 +161,8 @@ export function FormSection() {
               </div>
 
               <label className="flex items-start gap-3">
-                <input
-                  type="checkbox"
+                <Checkbox
+                  id="privacy-policy"
                   required
                   className="mt-1 h-4 w-4 rounded border-border text-primary"
                 />
