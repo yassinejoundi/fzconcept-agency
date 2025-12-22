@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { Button } from "../ui/button"
 import heroBg from "@/assets/images/home-page/hero-background.webp"
+import * as motion from "motion/react-client"
+import { fadeInUp } from "@/lib/animations"
 
 export function HeroSection() {
   return (
@@ -13,7 +15,13 @@ export function HeroSection() {
       </div>
 
       <div className="relative mx-auto w-full max-w-7xl px-6 pb-16 pt-28 md:px-10 md:pb-24 md:pt-32">
-        <div className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
+        <motion.div
+          className="mx-auto flex max-w-4xl flex-col items-center gap-6 text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+        >
           <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2.5 shadow-lg border border-gold/30">
             <div className="h-2 w-2 rounded-full bg-gold" />
             <span className="text-sm font-medium text-primary tracking-wide uppercase">
@@ -23,7 +31,7 @@ export function HeroSection() {
 
           <h1 className="font-serif text-5xl font-bold leading-tight text-foreground md:text-7xl">
             Design Services
-            <span className="block mt-2 bg-gradient-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-3">
+            <span className="block mt-2 bg-linear-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-3">
               Crafted With Intention
             </span>
           </h1>
@@ -50,7 +58,7 @@ export function HeroSection() {
               <Link href="/portfolio">View Portfolio</Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

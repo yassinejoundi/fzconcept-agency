@@ -1,4 +1,6 @@
 import { CheckCircle2 } from "lucide-react"
+import * as motion from "motion/react-client"
+import { scaleIn, slideInLeft } from "@/lib/animations"
 
 export function DeliverablesSection() {
   const deliverables = [
@@ -14,7 +16,12 @@ export function DeliverablesSection() {
     <section className="bg-muted/30">
       <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-start">
-          <div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInLeft}
+          >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
               Deliverables
             </p>
@@ -33,9 +40,15 @@ export function DeliverablesSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
+          <motion.div
+            className="rounded-2xl border border-border bg-card p-8 shadow-sm"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+          >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
               Signature Standards
             </p>
@@ -70,7 +83,7 @@ export function DeliverablesSection() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

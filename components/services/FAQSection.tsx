@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function FAQSection() {
   const faqs = [
@@ -35,8 +37,17 @@ export function FAQSection() {
   ] as const
   return (
     <section className="bg-background">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="mx-auto max-w-3xl text-center"
+          variants={fadeInUp}
+        >
           <p className="text-sm font-bold uppercase text-gold tracking-widest">
             FAQ
           </p>
@@ -47,9 +58,9 @@ export function FAQSection() {
             Clear answers to help you choose the right service and move forward
             with confidence.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mx-auto mt-10 max-w-3xl">
+        <motion.div className="mx-auto mt-10 max-w-3xl" variants={fadeInUp}>
           <Accordion type="single" collapsible className="w-full space-y-4">
             {faqs.map((faq, index) => (
               <AccordionItem
@@ -66,8 +77,8 @@ export function FAQSection() {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

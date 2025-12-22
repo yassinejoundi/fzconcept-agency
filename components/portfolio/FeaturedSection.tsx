@@ -1,5 +1,7 @@
 import Image from "next/image"
 import { MapPin, Sparkles } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function FeaturedSection() {
   const featured = [
@@ -27,8 +29,17 @@ export function FeaturedSection() {
   ] as const
   return (
     <section className="bg-background">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="mx-auto max-w-3xl text-center"
+          variants={fadeInUp}
+        >
           <p className="text-sm font-bold uppercase text-gold tracking-widest">
             Featured
           </p>
@@ -39,15 +50,19 @@ export function FeaturedSection() {
             A curated view of recent work—each project is designed for warmth,
             balance, and premium detail.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <motion.div
+          className="mt-12 grid gap-6 md:grid-cols-3"
+          variants={staggerContainer}
+        >
           {featured.map((project) => (
-            <div
+            <motion.div
               key={project.title}
               className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              variants={fadeInUp}
             >
-              <div className="relative aspect-[4/5]">
+              <div className="relative aspect-4/5">
                 <Image
                   src={project.image}
                   alt={project.title}
@@ -70,10 +85,10 @@ export function FeaturedSection() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

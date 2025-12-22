@@ -2,6 +2,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "../ui/button"
 import { ArrowRight } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function GallerySection() {
   const gallery = [
@@ -45,7 +47,7 @@ export function GallerySection() {
       title: "Clean Kitchen Lines",
       tag: "Renovation",
       image:
-        "https://images.unsplash.com/photo-1600566753151-384129cf4e3f?q=80&w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1565538810643-b5bdb714032a?q=80&w=1600&auto=format&fit=crop",
     },
     {
       title: "Quiet Corner",
@@ -57,14 +59,23 @@ export function GallerySection() {
       title: "Premium Bath",
       tag: "Materials",
       image:
-        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6d3?q=80&w=1600&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?q=80&w=1600&auto=format&fit=crop",
     },
   ] as const
 
   return (
     <section className="bg-muted/30">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+          variants={fadeInUp}
+        >
           <div className="max-w-2xl">
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
               Gallery
@@ -86,15 +97,19 @@ export function GallerySection() {
               Request a Quote <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
-        </div>
+        </motion.div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          variants={staggerContainer}
+        >
           {gallery.map((item) => (
-            <div
+            <motion.div
               key={item.title}
               className="group rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md overflow-hidden"
+              variants={fadeInUp}
             >
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-4/3">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -112,10 +127,10 @@ export function GallerySection() {
                   {item.title}
                 </h3>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

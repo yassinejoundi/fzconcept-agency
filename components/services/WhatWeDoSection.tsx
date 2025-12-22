@@ -1,4 +1,6 @@
 import { Brush, Building2, Compass, Home, LayoutGrid, Sofa } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function WhatWeDoSection() {
   const offerings = [
@@ -41,8 +43,17 @@ export function WhatWeDoSection() {
   ] as const
   return (
     <section className="bg-background">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="mx-auto max-w-3xl text-center"
+          variants={fadeInUp}
+        >
           <p className="text-sm font-bold uppercase text-gold tracking-widest">
             What We Do
           </p>
@@ -53,13 +64,17 @@ export function WhatWeDoSection() {
             Choose a complete experience or a focused service. Every detail is
             designed to feel elevated, timeless, and personal.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div
+          className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          variants={staggerContainer}
+        >
           {offerings.map(({ title, description, icon: Icon }) => (
-            <div
+            <motion.div
               key={title}
               className="group rounded-2xl border border-border bg-card p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              variants={fadeInUp}
             >
               <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary ring-1 ring-gold/20 transition-colors group-hover:bg-gold/15">
                 <Icon className="h-5 w-5 text-primary" />
@@ -70,10 +85,10 @@ export function WhatWeDoSection() {
               <p className="mt-3 font-sans text-sm text-muted-foreground leading-relaxed">
                 {description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }
