@@ -112,27 +112,42 @@ export function Footer() {
             </h4>
             <ul className="flex flex-col gap-4 font-sans text-white/80">
               <li>
-                <Link href="#" className="transition-colors hover:text-gold">
+                <Link
+                  href="/services"
+                  className="transition-colors hover:text-gold"
+                >
                   Interior Design
                 </Link>
               </li>
               <li>
-                <Link href="#" className="transition-colors hover:text-gold">
+                <Link
+                  href="/services"
+                  className="transition-colors hover:text-gold"
+                >
                   Space Planning
                 </Link>
               </li>
               <li>
-                <Link href="#" className="transition-colors hover:text-gold">
+                <Link
+                  href="/services"
+                  className="transition-colors hover:text-gold"
+                >
                   Furniture Selection
                 </Link>
               </li>
               <li>
-                <Link href="#" className="transition-colors hover:text-gold">
+                <Link
+                  href="/services"
+                  className="transition-colors hover:text-gold"
+                >
                   Renovation
                 </Link>
               </li>
               <li>
-                <Link href="#" className="transition-colors hover:text-gold">
+                <Link
+                  href="/services"
+                  className="transition-colors hover:text-gold"
+                >
                   Consultation
                 </Link>
               </li>

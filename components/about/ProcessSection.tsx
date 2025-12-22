@@ -1,7 +1,7 @@
 import { Brush } from "lucide-react"
 import Image from "next/image"
 import * as motion from "motion/react-client"
-import { fadeInUp, scaleIn, slideInLeft } from "@/lib/animations"
+import { scaleIn, slideInLeft } from "@/lib/animations"
 
 export function ProcessSection() {
   const processSteps = [

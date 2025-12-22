@@ -1,6 +1,6 @@
 "use client"
 
-import * as React from "react"
+import { useState, FormEvent } from "react"
 import { Mail, MapPin, Phone } from "lucide-react"
 import * as motion from "motion/react-client"
 import { scaleIn, slideInLeft } from "@/lib/animations"
@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 export function FormSection() {
-  const [submitted, setSubmitted] = React.useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setSubmitted(true)
   }
