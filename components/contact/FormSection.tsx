@@ -9,11 +9,52 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 
 export function FormSection() {
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle")
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setSubmitted(true)
+
+    setStatus("submitting")
+    setErrorMessage(null)
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    const payload = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      reason: formData.get("reason"),
+      location: formData.get("location"),
+      message: formData.get("message"),
+      website: formData.get("website"),
+    }
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as
+          | { error?: string }
+          | null
+        setStatus("error")
+        setErrorMessage(data?.error ?? "Something went wrong. Please try again.")
+        return
+      }
+
+      setStatus("success")
+      form.reset()
+    } catch {
+      setStatus("error")
+      setErrorMessage("Something went wrong. Please try again.")
+    }
   }
 
   return (
@@ -85,6 +126,13 @@ export function FormSection() {
             variants={scaleIn}
           >
             <form onSubmit={handleSubmit} className="grid gap-6">
+              <input
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+              />
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-medium font-sans text-foreground">
@@ -185,12 +233,19 @@ export function FormSection() {
               </label>
 
               <div className="grid gap-3">
-                <Button className="h-12 rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90">
-                  Send Message
+                <Button
+                  className="h-12 rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
+                  disabled={status === "submitting"}
+                >
+                  {status === "submitting" ? "Sending..." : "Send Message"}
                 </Button>
-                {submitted ? (
+                {status === "success" ? (
                   <p className="text-center text-sm font-sans text-muted-foreground">
                     Thanks — we received your message and will reply shortly.
+                  </p>
+                ) : status === "error" ? (
+                  <p className="text-center text-sm font-sans text-destructive">
+                    {errorMessage ?? "Something went wrong. Please try again."}
                   </p>
                 ) : null}
               </div>
