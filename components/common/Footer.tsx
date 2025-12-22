@@ -194,7 +194,17 @@ export function Footer() {
       {/* Copyright */}
       <div className="border-t border-white/10 bg-black/20 py-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 text-center text-sm text-white/50 md:flex-row md:px-10 md:text-left font-sans">
-          <p>&copy; {currentYear} FZ Concept. All rights reserved.</p>
+          <p>
+            &copy; {currentYear} FZ Concept. All rights reserved. | Created by{" "}
+            <a
+              href="https://yassinejoundi.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors"
+            >
+              Yassine Joundi
+            </a>
+          </p>
           <div className="flex gap-8">
             <Link
               href="/privacy-policy"
