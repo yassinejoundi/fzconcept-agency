@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 import heroBg from "@/assets/images/home-page/hero-background.webp"
 import { NavbarSection } from "@/components/common/NavbarSection"
@@ -68,7 +70,13 @@ export default function TermsOfServicePage() {
           </div>
 
           <div className="relative mx-auto w-full max-w-7xl px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
-            <div className="mx-auto flex max-w-4xl flex-col items-center gap-5 text-center">
+            <motion.div
+              className="mx-auto flex max-w-4xl flex-col items-center gap-5 text-center"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeInUp}
+            >
               <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2.5 shadow-lg border border-gold/30">
                 <div className="h-2 w-2 rounded-full bg-gold" />
                 <span className="text-sm font-medium text-primary tracking-wide uppercase">
@@ -78,7 +86,7 @@ export default function TermsOfServicePage() {
 
               <h1 className="font-serif text-5xl font-bold leading-tight text-foreground md:text-7xl">
                 Terms of Service
-                <span className="block mt-2 bg-gradient-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-3">
+                <span className="block mt-2 bg-linear-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-3">
                   Clear & Transparent
                 </span>
               </h1>
@@ -105,16 +113,22 @@ export default function TermsOfServicePage() {
                   <Link href="/privacy-policy">Privacy Policy</Link>
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         <section className="bg-background">
           <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-            <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10">
+            <motion.div
+              className="mx-auto max-w-4xl rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={staggerContainer}
+            >
               <div className="grid gap-10">
                 {sections.map((section) => (
-                  <div key={section.title}>
+                  <motion.div key={section.title} variants={fadeInUp}>
                     <h2 className="text-2xl font-bold font-serif text-foreground">
                       {section.title}
                     </h2>
@@ -123,22 +137,24 @@ export default function TermsOfServicePage() {
                         <p key={line}>{line}</p>
                       ))}
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
-              <div className="mt-10 rounded-xl border border-border bg-secondary/40 p-6">
+              <motion.div
+                className="mt-10 rounded-xl border border-border bg-secondary/40 p-6"
+                variants={fadeInUp}
+              >
                 <p className="font-sans text-sm text-muted-foreground">
                   This page is provided for general information and does not
                   constitute legal advice. If you have specific questions,
                   please consult a qualified professional.
                 </p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </section>
       </main>
     </div>
   )
 }
-
