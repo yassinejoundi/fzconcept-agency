@@ -11,10 +11,19 @@ type ContactSubmissionPayload = {
   website?: string
 }
 
+type RateLimitRecord = { count: number; resetAt: number }
+
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
+const RATE_LIMIT_MAX_REQUESTS = 10
+
 function getClient() {
   const supabaseUrl =
     process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ??
+    process.env.SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
 
   if (!supabaseUrl || !supabaseKey) return null
 
@@ -35,7 +44,90 @@ function normalize(value: string) {
   return value.trim().replace(/\s+/g, " ")
 }
 
+function getIpAddress(request: Request) {
+  const forwardedFor = request.headers.get("x-forwarded-for") ?? ""
+  return normalize(forwardedFor.split(",")[0] ?? "")
+}
+
+function getAllowedOrigins(request: Request) {
+  const allowlist = (process.env.ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+
+  const forwardedHost = request.headers.get("x-forwarded-host") ?? ""
+  const host = request.headers.get("host") ?? forwardedHost
+  const proto = request.headers.get("x-forwarded-proto") ?? "https"
+
+  const allowed = new Set<string>(allowlist)
+  if (host) {
+    allowed.add(`${proto}://${host}`)
+    allowed.add(`https://${host}`)
+    allowed.add(`http://${host}`)
+  }
+
+  return allowed
+}
+
+function isAllowedOrigin(request: Request) {
+  const origin = request.headers.get("origin") ?? ""
+  if (!origin) return false
+  return getAllowedOrigins(request).has(origin)
+}
+
+function getRateLimitStore() {
+  const globalStore = globalThis as unknown as {
+    __contactRateLimit?: Map<string, RateLimitRecord>
+  }
+  if (!globalStore.__contactRateLimit)
+    globalStore.__contactRateLimit = new Map()
+  return globalStore.__contactRateLimit
+}
+
+function checkRateLimit(key: string) {
+  const store = getRateLimitStore()
+  const now = Date.now()
+  const current = store.get(key)
+
+  if (!current || current.resetAt <= now) {
+    store.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    return { allowed: true, retryAfterSeconds: 0 }
+  }
+
+  if (current.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return {
+      allowed: false,
+      retryAfterSeconds: Math.max(1, Math.ceil((current.resetAt - now) / 1000)),
+    }
+  }
+
+  current.count += 1
+  store.set(key, current)
+  return { allowed: true, retryAfterSeconds: 0 }
+}
+
 export async function POST(request: Request) {
+  if (!isAllowedOrigin(request)) {
+    return NextResponse.json(
+      { ok: false, error: "Forbidden." },
+      { status: 403 }
+    )
+  }
+
+  const ipAddress = getIpAddress(request)
+  const userAgent = request.headers.get("user-agent") ?? ""
+  const rateKey = `${ipAddress || "unknown"}|${userAgent.slice(0, 120)}`
+  const rateLimit = checkRateLimit(rateKey)
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests. Please try again later." },
+      {
+        status: 429,
+        headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
+      }
+    )
+  }
+
   const supabase = getClient()
   if (!supabase) {
     return NextResponse.json(
@@ -107,9 +199,6 @@ export async function POST(request: Request) {
     )
   }
 
-  const forwardedFor = request.headers.get("x-forwarded-for") ?? ""
-  const ipAddress = normalize(forwardedFor.split(",")[0] ?? "")
-  const userAgent = request.headers.get("user-agent") ?? ""
   const pageUrl = request.headers.get("referer") ?? ""
 
   const { error } = await supabase.from("contact_submissions").insert([
