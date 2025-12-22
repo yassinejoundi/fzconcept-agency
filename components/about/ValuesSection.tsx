@@ -1,4 +1,7 @@
 import { Award, Gem, Handshake, Sparkles } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
+
 export function ValuesSection() {
   const values = [
     {
@@ -28,8 +31,17 @@ export function ValuesSection() {
   ] as const
   return (
     <section className="bg-muted/30">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
+        <motion.div
+          className="mx-auto max-w-3xl text-center"
+          variants={fadeInUp}
+        >
           <p className="text-sm font-bold uppercase text-gold tracking-widest">
             Values
           </p>
@@ -40,13 +52,17 @@ export function ValuesSection() {
             A premium experience is built on clarity, craft, and care — from the
             first mood board to the final styling.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <motion.div
+          className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+          variants={staggerContainer}
+        >
           {values.map(({ title, description, icon: Icon }) => (
-            <div
+            <motion.div
               key={title}
               className="rounded-2xl border border-border bg-card p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              variants={fadeInUp}
             >
               <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-primary ring-1 ring-gold/20">
                 <Icon className="h-5 w-5 text-primary" />
@@ -57,10 +73,10 @@ export function ValuesSection() {
               <p className="mt-2 font-sans text-sm text-muted-foreground leading-relaxed">
                 {description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

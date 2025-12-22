@@ -1,6 +1,8 @@
 import heroBg from "@/assets/images/home-page/hero-background.webp"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function HeroSection() {
   return (
@@ -17,22 +19,31 @@ export function HeroSection() {
       {/* Content Container */}
       <div className="relative mx-auto w-full max-w-7xl px-6 py-18 md:px-10 md:py-24 lg:py-28">
         {/* Hero Content */}
-        <div className="flex min-h-[85vh] flex-col justify-center mx-auto w-full max-w-4xl gap-8 md:gap-12">
+        <motion.div
+          className="flex min-h-[85vh] flex-col justify-center mx-auto w-full max-w-4xl gap-8 md:gap-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+        >
           {/* Badge */}
-          <div className="flex justify-center animate-fade-in-up">
+          <motion.div className="flex justify-center" variants={fadeInUp}>
             <div className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-sm px-5 py-2.5 shadow-lg border border-gold/30">
               <div className="h-2 w-2 rounded-full bg-gold animate-pulse"></div>
               <span className="text-sm font-medium text-primary tracking-wide uppercase">
                 Premium Interior Design
               </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Main Headline */}
-          <div className="flex flex-col items-center gap-y-3 animate-fade-in-up animation-delay-200">
+          <motion.div
+            className="flex flex-col items-center gap-y-3"
+            variants={fadeInUp}
+          >
             <h1 className="text-center font-serif text-5xl font-bold leading-tight text-foreground md:text-7xl lg:text-8xl">
               Transform Your
-              <span className="block mt-2 bg-gradient-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-4">
+              <span className="block mt-2 bg-linear-to-r from-primary via-yellow-600 to-gold bg-clip-text text-transparent pb-4">
                 Living Space
               </span>
             </h1>
@@ -41,10 +52,13 @@ export function HeroSection() {
               blend timeless elegance with modern sophistication. We create
               spaces that inspire.
             </p>
-          </div>
+          </motion.div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 animate-fade-in-up animation-delay-400">
+          <motion.div
+            className="flex flex-wrap items-center justify-center gap-4 md:gap-6"
+            variants={fadeInUp}
+          >
             <Button
               asChild
               size="xl"
@@ -70,10 +84,13 @@ export function HeroSection() {
                 <span>View Portfolio</span>
               </Link>
             </Button>
-          </div>
+          </motion.div>
 
           {/* Stats/Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 pt-8 animate-fade-in-up animation-delay-600">
+          <motion.div
+            className="flex flex-wrap items-center justify-center gap-8 md:gap-12 pt-8"
+            variants={fadeInUp}
+          >
             <div className="flex flex-col items-center gap-1">
               <p className="font-serif text-3xl md:text-4xl font-bold text-primary">
                 50+
@@ -100,8 +117,8 @@ export function HeroSection() {
                 Client Satisfaction
               </p>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )

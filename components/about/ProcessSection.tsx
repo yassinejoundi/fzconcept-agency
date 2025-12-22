@@ -1,5 +1,8 @@
 import { Brush } from "lucide-react"
 import Image from "next/image"
+import * as motion from "motion/react-client"
+import { fadeInUp, scaleIn, slideInLeft } from "@/lib/animations"
+
 export function ProcessSection() {
   const processSteps = [
     {
@@ -21,7 +24,13 @@ export function ProcessSection() {
     <section className="bg-background">
       <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10">
+          <motion.div
+            className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInLeft}
+          >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
               How We Work
             </p>
@@ -56,9 +65,15 @@ export function ProcessSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
+          <motion.div
+            className="relative aspect-4/5 overflow-hidden rounded-2xl border border-border bg-muted shadow-sm"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+          >
             <Image
               src="https://images.unsplash.com/photo-1615873968403-89e068629265?q=80&w=1400&auto=format&fit=crop"
               alt="Luxury interior styling"
@@ -83,7 +98,7 @@ export function ProcessSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

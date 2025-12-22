@@ -1,11 +1,19 @@
 import { MapPin } from "lucide-react"
 import Image from "next/image"
+import * as motion from "motion/react-client"
+import { fadeInUp, scaleIn, slideInLeft } from "@/lib/animations"
+
 export function OurStorySection() {
   return (
     <section className="bg-background">
       <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInLeft}
+          >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
               Our Story
             </p>
@@ -47,10 +55,16 @@ export function OurStorySection() {
                 </p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
+          <motion.div
+            className="relative"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+          >
+            <div className="relative aspect-4/5 overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
               <Image
                 src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1400&auto=format&fit=crop"
                 alt="FZ Concept interior design"
@@ -74,7 +88,7 @@ export function OurStorySection() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

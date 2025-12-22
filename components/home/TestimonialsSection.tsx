@@ -2,6 +2,8 @@
 
 import { Star, Quote } from "lucide-react"
 import Image from "next/image"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function TestimonialsSection() {
   const testimonials = [
@@ -33,23 +35,33 @@ export function TestimonialsSection() {
 
   return (
     <section className="bg-secondary/30 py-20">
-      <div className="mx-auto max-w-7xl px-5 md:px-10">
+      <motion.div
+        className="mx-auto max-w-7xl px-5 md:px-10"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         {/* Header */}
-        <div className="mb-12 text-center">
+        <motion.div className="mb-12 text-center" variants={fadeInUp}>
           <h2 className="text-3xl font-bold font-serif text-primary md:text-5xl">
             Client Stories
           </h2>
           <p className="mt-4 text-muted-foreground font-sans">
             Hear from those who have experienced the FZ Concept transformation.
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid */}
-        <div className="grid gap-8 md:grid-cols-3">
+        <motion.div
+          className="grid gap-8 md:grid-cols-3"
+          variants={staggerContainer}
+        >
           {testimonials.map((item, index) => (
-            <div
+            <motion.div
               key={index}
               className="group relative flex flex-col items-center rounded-2xl border border-border bg-card p-8 text-center shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-md"
+              variants={fadeInUp}
             >
               {/* Clipping Container for Background Elements */}
               <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
@@ -95,10 +107,10 @@ export function TestimonialsSection() {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

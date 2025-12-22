@@ -1,5 +1,7 @@
 import Image from "next/image"
 import { Palette, Leaf, Award } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp, scaleIn, slideInLeft } from "@/lib/animations"
 
 export function ApproachSection() {
   return (
@@ -9,7 +11,13 @@ export function ApproachSection() {
         {/* Component */}
         <div className="grid items-center justify-items-start gap-8 sm:gap-16 md:grid-cols-2">
           {/* Hero Content */}
-          <div className="flex flex-col">
+          <motion.div
+            className="flex flex-col"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInLeft}
+          >
             {/* Hero Divider */}
             <div className="mb-4 flex items-center">
               <div className="mr-4 w-10 border-t border-gold"></div>
@@ -40,15 +48,22 @@ export function ApproachSection() {
                 <p className="text-sm">Expert Craftsmanship</p>
               </div>
             </div>
-          </div>
+          </motion.div>
           {/* Hero Image */}
-          <Image
-            src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1000&auto=format&fit=crop"
-            alt="Interior Design Approach"
-            width={800}
-            height={600}
-            className="inline-block h-full w-full max-w-2xl rounded-2xl shadow-xl object-cover"
-          />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+          >
+            <Image
+              src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1000&auto=format&fit=crop"
+              alt="Interior Design Approach"
+              width={800}
+              height={600}
+              className="inline-block h-full w-full max-w-2xl rounded-2xl shadow-xl object-cover"
+            />
+          </motion.div>
         </div>
       </div>
     </section>

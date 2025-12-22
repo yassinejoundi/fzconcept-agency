@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import * as motion from "motion/react-client"
+import { fadeInUp } from "@/lib/animations"
 
 export function CTASection() {
   return (
@@ -13,7 +15,13 @@ export function CTASection() {
         <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-gold blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex max-w-4xl flex-col items-center px-5 text-center md:px-10">
+      <motion.div
+        className="relative mx-auto flex max-w-4xl flex-col items-center px-5 text-center md:px-10"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+      >
         <h2 className="mb-6 text-4xl font-bold font-serif leading-tight md:text-6xl">
           Ready to Redefine Your Space?
         </h2>
@@ -42,7 +50,7 @@ export function CTASection() {
             <Link href="/portfolio">View Portfolio</Link>
           </Button>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

@@ -4,6 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function FAQSection() {
   const faqs = [
@@ -27,9 +29,18 @@ export function FAQSection() {
   return (
     <section className="bg-background">
       {/* Container */}
-      <div className="mx-auto w-full max-w-7xl px-4 py-16 md:px-6 md:py-20">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-4 py-16 md:px-6 md:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         {/* Component */}
-        <div className="mx-auto flex max-w-xl flex-col items-center justify-center px-6 text-center md:max-w-3xl md:px-10">
+        <motion.div
+          className="mx-auto flex max-w-xl flex-col items-center justify-center px-6 text-center md:max-w-3xl md:px-10"
+          variants={fadeInUp}
+        >
           <h2 className="mx-auto text-center font-bold font-serif text-primary text-3xl md:text-5xl">
             Frequently Asked Questions
           </h2>
@@ -37,9 +48,9 @@ export function FAQSection() {
             Everything you need to know about our interior design process and
             services.
           </p>
-        </div>
+        </motion.div>
         {/* FAQs */}
-        <div className="mt-10 mx-auto max-w-3xl">
+        <motion.div className="mt-10 mx-auto max-w-3xl" variants={fadeInUp}>
           <Accordion
             type="single"
             collapsible
@@ -61,8 +72,8 @@ export function FAQSection() {
               </AccordionItem>
             ))}
           </Accordion>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

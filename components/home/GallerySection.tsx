@@ -11,6 +11,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel"
 import { cn } from "@/lib/utils"
+import * as motion from "motion/react-client"
+import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function GallerySection() {
   const [api, setApi] = React.useState<CarouselApi>()
@@ -42,11 +44,17 @@ export function GallerySection() {
   return (
     <section className="bg-muted/30">
       {/* Container */}
-      <div className="mx-auto w-full max-w-7xl px-5 py-10 md:px-10 lg:px-20 lg:py-20">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-5 py-10 md:px-10 lg:px-20 lg:py-20"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={staggerContainer}
+      >
         {/* Component */}
         <div className="flex flex-col items-center gap-y-10 py-10 lg:py-12">
           {/* Hero Title */}
-          <div className="max-w-3xl">
+          <motion.div className="max-w-3xl" variants={fadeInUp}>
             <h1 className="m-5 text-center text-3xl font-bold font-serif text-primary sm:text-4xl md:text-5xl lg:text-6xl">
               Our Masterpieces
             </h1>
@@ -54,11 +62,11 @@ export function GallerySection() {
               Explore a curated selection of our finest interior design
               projects, showcasing our commitment to luxury and detail.
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Carousel */}
-        <div className="w-full">
+        <motion.div className="w-full" variants={fadeInUp}>
           <Carousel
             setApi={setApi}
             opts={{
@@ -113,8 +121,8 @@ export function GallerySection() {
               </div>
             </div>
           </Carousel>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   )
 }
