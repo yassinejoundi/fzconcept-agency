@@ -2,6 +2,8 @@
 
 import * as React from "react"
 import { Mail, MapPin, Phone } from "lucide-react"
+import * as motion from "motion/react-client"
+import { scaleIn, slideInLeft } from "@/lib/animations"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -15,10 +17,15 @@ export function FormSection() {
   }
 
   return (
-    <section className="bg-secondary/20">
+    <section className="bg-secondary/20" id="contact-form">
       <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
         <div className="grid gap-10 md:grid-cols-2 md:items-start">
-          <div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInLeft}
+          >
             <div className="mb-4 flex items-center">
               <div className="mr-4 w-10 border-t border-gold" />
               <p className="text-sm font-medium font-sans text-gold uppercase tracking-wider">
@@ -68,9 +75,15 @@ export function FormSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10">
+          <motion.div
+            className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={scaleIn}
+          >
             <form onSubmit={handleSubmit} className="grid gap-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
@@ -182,7 +195,7 @@ export function FormSection() {
                 ) : null}
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

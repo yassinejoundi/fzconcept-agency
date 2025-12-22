@@ -9,7 +9,7 @@ export function ServicesSection() {
         className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true }}
         variants={staggerContainer}
       >
         {/* Title */}
