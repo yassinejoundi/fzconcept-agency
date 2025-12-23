@@ -141,3 +141,12 @@ Deploy to Vercel (recommended):
 
 - Set environment variables in the Vercel dashboard (do not rely on local `.env`).
 - Ensure server-only variables are not prefixed with `NEXT_PUBLIC_`.
+
+## Contact
+
+- Twitter/X: `@mee_yassine`
+- Instagram: `@yassine_joundi`
+- LinkedIn: `Yassine Joundi`
+- Email: `joundiyassine@outlook.com`
+
+⭐ Star this repo if you find it helpful!
