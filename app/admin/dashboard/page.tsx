@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { LayoutDashboard, Mail, LogOut } from "lucide-react"
 
 import { NavbarSection } from "@/components/common/NavbarSection"
+import { MessagesSection } from "@/components/admin/MessagesSection"
 import { Button } from "@/components/ui/button"
 import {
   getAdminCookieName,
@@ -116,6 +117,8 @@ export default async function AdminDashboardPage() {
                 </div>
               </div>
             </div>
+
+            <MessagesSection />
           </div>
         </section>
       </main>
