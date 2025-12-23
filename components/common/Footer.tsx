@@ -33,7 +33,8 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.instagram.com/f.zconcept"
+                target="_blank"
                 className="rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-gold hover:text-white"
               >
                 <Instagram className="h-5 w-5" />
