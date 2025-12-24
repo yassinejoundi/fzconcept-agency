@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { NavbarSection } from "@/components/common/NavbarSection"
 import { HeroSection } from "@/components/about/HeroSection"
 import { OurStorySection } from "@/components/about/OurStorySection"
+import { OwnerQuoteSection } from "@/components/about/OwnerQuoteSection"
 import { ValuesSection } from "@/components/about/ValuesSection"
 import { ProcessSection } from "@/components/about/ProcessSection"
 import { CTASection } from "@/components/home/CTASection"
@@ -31,6 +32,7 @@ export default function AboutPage() {
       <main>
         <HeroSection />
         <OurStorySection />
+        <OwnerQuoteSection />
         <ValuesSection />
         <ProcessSection />
         <TestimonialsSection />
