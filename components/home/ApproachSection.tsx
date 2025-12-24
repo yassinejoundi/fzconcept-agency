@@ -40,6 +40,7 @@ export async function ApproachSection() {
         <div className="grid items-center justify-items-start gap-8 sm:gap-16 md:grid-cols-2">
           {/* Hero Content */}
           <motion.div
+            key={`${locale}-content`}
             className="flex flex-col"
             initial="hidden"
             whileInView="visible"
@@ -78,6 +79,7 @@ export async function ApproachSection() {
           </motion.div>
           {/* Hero Image */}
           <motion.div
+            key={`${locale}-image`}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}

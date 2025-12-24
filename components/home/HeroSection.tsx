@@ -53,6 +53,7 @@ export async function HeroSection() {
       <div className="relative mx-auto w-full max-w-7xl px-6 py-18 md:px-10 md:py-24 lg:py-28">
         {/* Hero Content */}
         <motion.div
+          key={locale}
           className="flex min-h-[85vh] flex-col justify-center mx-auto w-full max-w-4xl gap-8 md:gap-12"
           initial="hidden"
           whileInView="visible"

@@ -11,12 +11,14 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useI18n } from "@/components/common/I18nProvider"
 
 export function NavbarSection() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { locale, setLocale } = useI18n()
+  const router = useRouter()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +28,12 @@ export function NavbarSection() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const handleLocaleChange = (nextLocale: "en" | "fr") => {
+    if (nextLocale === locale) return
+    setLocale(nextLocale)
+    router.refresh()
+  }
 
   const copy =
     locale === "fr"
@@ -158,7 +166,7 @@ export function NavbarSection() {
             >
               <button
                 type="button"
-                onClick={() => setLocale("en")}
+                onClick={() => handleLocaleChange("en")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
                   locale === "en"
                     ? "bg-primary text-primary-foreground"
@@ -169,7 +177,7 @@ export function NavbarSection() {
               </button>
               <button
                 type="button"
-                onClick={() => setLocale("fr")}
+                onClick={() => handleLocaleChange("fr")}
                 className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
                   locale === "fr"
                     ? "bg-primary text-primary-foreground"
@@ -207,7 +215,7 @@ export function NavbarSection() {
                     >
                       <button
                         type="button"
-                        onClick={() => setLocale("en")}
+                        onClick={() => handleLocaleChange("en")}
                         className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
                           locale === "en"
                             ? "bg-primary text-primary-foreground"
@@ -218,7 +226,7 @@ export function NavbarSection() {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setLocale("fr")}
+                        onClick={() => handleLocaleChange("fr")}
                         className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
                           locale === "fr"
                             ? "bg-primary text-primary-foreground"

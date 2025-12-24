@@ -56,6 +56,7 @@ export async function ServicesSection() {
     <section className="bg-background">
       {/* Container */}
       <motion.div
+        key={locale}
         className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20"
         initial="hidden"
         whileInView="visible"
