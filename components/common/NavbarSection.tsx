@@ -39,7 +39,7 @@ export function NavbarSection() {
     locale === "fr"
       ? {
           companyName: "FZ Concept",
-          cta: "Réserver une consultation",
+          cta: "Demander un Devis",
           languageLabel: "Langue",
           nav: [
             { title: "Accueil", href: "/", description: "Retour à l’accueil" },
@@ -67,7 +67,7 @@ export function NavbarSection() {
         }
       : {
           companyName: "FZ Concept",
-          cta: "Book a Consultation",
+          cta: "Request a Quote",
           languageLabel: "Language",
           nav: [
             {

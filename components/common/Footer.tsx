@@ -27,7 +27,7 @@ export function Footer() {
           links: {
             home: "Accueil",
             about: "À propos",
-            portfolio: "Portfolio",
+            portfolio: "Réalisations",
             services: "Services",
             contact: "Contact",
             privacy: "Politique de confidentialité",
@@ -53,7 +53,7 @@ export function Footer() {
           links: {
             home: "Home",
             about: "About Us",
-            portfolio: "Portfolio",
+            portfolio: "Our Work",
             services: "Services",
             contact: "Contact",
             privacy: "Privacy Policy",

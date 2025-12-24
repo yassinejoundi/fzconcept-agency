@@ -34,6 +34,7 @@ export function FormSection() {
           reason: "Motif de contact",
           reasonPlaceholder: "Choisir un motif",
           reasons: {
+            quote: "Demander un devis",
             newProject: "Nouveau projet",
             renovation: "Rénovation",
             consultation: "Consultation",
@@ -68,6 +69,7 @@ export function FormSection() {
           reason: "Reason for contact",
           reasonPlaceholder: "Select a reason",
           reasons: {
+            quote: "Request a Quote",
             newProject: "New Project",
             renovation: "Renovation",
             consultation: "Consultation",
@@ -114,9 +116,9 @@ export function FormSection() {
       })
 
       if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null
+        const data = (await response.json().catch(() => null)) as {
+          error?: string
+        } | null
         setStatus("error")
         setErrorMessage(data?.error ?? copy.error)
         return
@@ -258,8 +260,13 @@ export function FormSection() {
                     <option value="" disabled>
                       {copy.reasonPlaceholder}
                     </option>
-                    <option value="new-project">{copy.reasons.newProject}</option>
-                    <option value="renovation">{copy.reasons.renovation}</option>
+                    <option value="quote">{copy.reasons.quote}</option>
+                    <option value="new-project">
+                      {copy.reasons.newProject}
+                    </option>
+                    <option value="renovation">
+                      {copy.reasons.renovation}
+                    </option>
                     <option value="consultation">
                       {copy.reasons.consultation}
                     </option>
