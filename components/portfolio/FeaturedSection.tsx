@@ -2,31 +2,70 @@ import Image from "next/image"
 import { MapPin, Sparkles } from "lucide-react"
 import * as motion from "motion/react-client"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { getRequestLocale } from "@/lib/locale.server"
 
-export function FeaturedSection() {
-  const featured = [
-    {
-      title: "Marrakech Riad — Warm Minimal Luxury",
-      location: "Marrakech",
-      tag: "Riad Redesign",
-      image:
-        "https://images.unsplash.com/photo-1615873968403-89e068629265?q=80&w=1800&auto=format&fit=crop",
-    },
-    {
-      title: "Coastal Villa — Texture & Light",
-      location: "Essaouira",
-      tag: "Full-Service Design",
-      image:
-        "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1800&auto=format&fit=crop",
-    },
-    {
-      title: "Boutique Suite — Gold Accents",
-      location: "Casablanca",
-      tag: "Styling & Decor",
-      image:
-        "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1800&auto=format&fit=crop",
-    },
-  ] as const
+export async function FeaturedSection() {
+  const locale = await getRequestLocale()
+  const copy =
+    locale === "fr"
+      ? {
+          eyebrow: "À la une",
+          title: "Transformations sélectionnées",
+          description:
+            "Une sélection de projets récents, pensés pour la chaleur, l’équilibre et le détail premium.",
+          featured: [
+            {
+              title: "Riad à Marrakech — minimalisme chaleureux",
+              location: "Marrakech",
+              tag: "Redesign de riad",
+              image:
+                "https://images.unsplash.com/photo-1615873968403-89e068629265?q=80&w=1800&auto=format&fit=crop",
+            },
+            {
+              title: "Villa côtière — texture & lumière",
+              location: "Essaouira",
+              tag: "Design clé en main",
+              image:
+                "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1800&auto=format&fit=crop",
+            },
+            {
+              title: "Suite boutique — accents dorés",
+              location: "Casablanca",
+              tag: "Styling & décor",
+              image:
+                "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1800&auto=format&fit=crop",
+            },
+          ] as const,
+        }
+      : {
+          eyebrow: "Featured",
+          title: "Selected Transformations",
+          description:
+            "A curated view of recent work—each project is designed for warmth, balance, and premium detail.",
+          featured: [
+            {
+              title: "Marrakech Riad — Warm Minimal Luxury",
+              location: "Marrakech",
+              tag: "Riad Redesign",
+              image:
+                "https://images.unsplash.com/photo-1615873968403-89e068629265?q=80&w=1800&auto=format&fit=crop",
+            },
+            {
+              title: "Coastal Villa — Texture & Light",
+              location: "Essaouira",
+              tag: "Full-Service Design",
+              image:
+                "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?q=80&w=1800&auto=format&fit=crop",
+            },
+            {
+              title: "Boutique Suite — Gold Accents",
+              location: "Casablanca",
+              tag: "Styling & Decor",
+              image:
+                "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1800&auto=format&fit=crop",
+            },
+          ] as const,
+        }
   return (
     <section className="bg-background">
       <motion.div
@@ -41,14 +80,13 @@ export function FeaturedSection() {
           variants={fadeInUp}
         >
           <p className="text-sm font-bold uppercase text-gold tracking-widest">
-            Featured
+            {copy.eyebrow}
           </p>
           <h2 className="mt-2 text-3xl font-bold font-serif text-primary md:text-5xl">
-            Selected Transformations
+            {copy.title}
           </h2>
           <p className="mt-4 font-sans text-muted-foreground">
-            A curated view of recent work—each project is designed for warmth,
-            balance, and premium detail.
+            {copy.description}
           </p>
         </motion.div>
 
@@ -56,7 +94,7 @@ export function FeaturedSection() {
           className="mt-12 grid gap-6 md:grid-cols-3"
           variants={staggerContainer}
         >
-          {featured.map((project) => (
+          {copy.featured.map((project) => (
             <motion.div
               key={project.title}
               className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"

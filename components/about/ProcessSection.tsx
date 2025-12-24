@@ -2,24 +2,66 @@ import { Brush } from "lucide-react"
 import Image from "next/image"
 import * as motion from "motion/react-client"
 import { scaleIn, slideInLeft } from "@/lib/animations"
+import { getRequestLocale } from "@/lib/locale.server"
 
-export function ProcessSection() {
-  const processSteps = [
-    {
-      title: "Consultation & Brief",
-      description: "We define your goals, priorities, and design direction.",
-    },
-    {
-      title: "Concept & Visualization",
-      description:
-        "Mood boards, layouts, and visuals that guide every decision.",
-    },
-    {
-      title: "Execution & Styling",
-      description:
-        "Coordinated sourcing, craftsmanship, and final finishing touches.",
-    },
-  ] as const
+export async function ProcessSection() {
+  const locale = await getRequestLocale()
+  const copy =
+    locale === "fr"
+      ? {
+          eyebrow: "Notre méthode",
+          title: "Un processus serein, haut de gamme",
+          description:
+            "Nous associons direction créative et exécution terrain. Vous obtenez des visuels, des sélections et une coordination conçus pour fluidifier le projet et sublimer le résultat.",
+          steps: [
+            {
+              title: "Consultation & brief",
+              description:
+                "Nous définissons vos objectifs, priorités et direction esthétique.",
+            },
+            {
+              title: "Concept & visualisation",
+              description:
+                "Mood boards, plans et visuels pour guider chaque décision.",
+            },
+            {
+              title: "Exécution & styling",
+              description:
+                "Sourcing, artisans, coordination et finitions finales.",
+            },
+          ],
+          imageAlt: "Styling d’intérieur haut de gamme",
+          calloutTitle: "Du design avec du sens",
+          calloutText:
+            "Chaque détail est sélectionné pour être cohérent, chaleureux et pleinement à votre image.",
+        }
+      : {
+          eyebrow: "How We Work",
+          title: "A Calm, Premium Process",
+          description:
+            "We combine creative direction with real-world execution. That means you get visuals, selections, and management designed to reduce friction and elevate results.",
+          steps: [
+            {
+              title: "Consultation & Brief",
+              description:
+                "We define your goals, priorities, and design direction.",
+            },
+            {
+              title: "Concept & Visualization",
+              description:
+                "Mood boards, layouts, and visuals that guide every decision.",
+            },
+            {
+              title: "Execution & Styling",
+              description:
+                "Coordinated sourcing, craftsmanship, and final finishing touches.",
+            },
+          ],
+          imageAlt: "Luxury interior styling",
+          calloutTitle: "Design With Meaning",
+          calloutText:
+            "Every detail is selected to feel cohesive, warm, and distinctly yours.",
+        }
   return (
     <section className="bg-background">
       <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
@@ -32,19 +74,17 @@ export function ProcessSection() {
             variants={slideInLeft}
           >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
-              How We Work
+              {copy.eyebrow}
             </p>
             <h2 className="mt-2 text-3xl font-bold font-serif text-primary md:text-5xl">
-              A Calm, Premium Process
+              {copy.title}
             </h2>
             <p className="mt-4 font-sans text-muted-foreground leading-relaxed">
-              We combine creative direction with real-world execution. That
-              means you get visuals, selections, and management designed to
-              reduce friction and elevate results.
+              {copy.description}
             </p>
 
             <div className="mt-8 grid gap-4">
-              {processSteps.map((step, index) => (
+              {copy.steps.map((step, index) => (
                 <div
                   key={step.title}
                   className="flex gap-4 rounded-xl border border-border bg-background p-5"
@@ -76,7 +116,7 @@ export function ProcessSection() {
           >
             <Image
               src="https://images.unsplash.com/photo-1615873968403-89e068629265?q=80&w=1400&auto=format&fit=crop"
-              alt="Luxury interior styling"
+              alt={copy.imageAlt}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
@@ -89,11 +129,10 @@ export function ProcessSection() {
                 </div>
                 <div>
                   <p className="font-serif font-semibold text-foreground">
-                    Design With Meaning
+                    {copy.calloutTitle}
                   </p>
                   <p className="mt-1 font-sans text-sm text-muted-foreground">
-                    Every detail is selected to feel cohesive, warm, and
-                    distinctly yours.
+                    {copy.calloutText}
                   </p>
                 </div>
               </div>

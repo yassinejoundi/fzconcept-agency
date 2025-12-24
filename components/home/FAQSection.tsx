@@ -6,25 +6,56 @@ import {
 } from "@/components/ui/accordion"
 import * as motion from "motion/react-client"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { getRequestLocale } from "@/lib/locale.server"
 
-export function FAQSection() {
-  const faqs = [
-    {
-      question: "What makes FZ Concept unique?",
-      answer:
-        "We blend traditional Moroccan aesthetics with modern luxury, creating unique spaces that tell a story.",
-    },
-    {
-      question: "Do you offer online consultations?",
-      answer:
-        "Yes, we offer virtual design consultations for clients worldwide.",
-    },
-    {
-      question: "How long does a project take?",
-      answer:
-        "Timelines vary by project scope, but typically range from 4-12 weeks for full room designs.",
-    },
-  ]
+export async function FAQSection() {
+  const locale = await getRequestLocale()
+  const copy =
+    locale === "fr"
+      ? {
+          title: "Questions fréquentes",
+          description:
+            "Tout ce qu’il faut savoir sur notre processus et nos services.",
+          faqs: [
+            {
+              question: "Qu’est-ce qui rend FZ Concept unique ?",
+              answer:
+                "Nous associons l’esthétique marocaine traditionnelle au luxe contemporain, pour créer des espaces uniques qui racontent une histoire.",
+            },
+            {
+              question: "Proposez-vous des consultations en ligne ?",
+              answer:
+                "Oui, nous proposons des consultations de design à distance pour des clients partout dans le monde.",
+            },
+            {
+              question: "Combien de temps dure un projet ?",
+              answer:
+                "Les délais varient selon l’ampleur, mais comptent généralement 4 à 12 semaines pour une pièce complète.",
+            },
+          ],
+        }
+      : {
+          title: "Frequently Asked Questions",
+          description:
+            "Everything you need to know about our interior design process and services.",
+          faqs: [
+            {
+              question: "What makes FZ Concept unique?",
+              answer:
+                "We blend traditional Moroccan aesthetics with modern luxury, creating unique spaces that tell a story.",
+            },
+            {
+              question: "Do you offer online consultations?",
+              answer:
+                "Yes, we offer virtual design consultations for clients worldwide.",
+            },
+            {
+              question: "How long does a project take?",
+              answer:
+                "Timelines vary by project scope, but typically range from 4-12 weeks for full room designs.",
+            },
+          ],
+        }
 
   return (
     <section className="bg-background">
@@ -42,11 +73,10 @@ export function FAQSection() {
           variants={fadeInUp}
         >
           <h2 className="mx-auto text-center font-bold font-serif text-primary text-3xl md:text-5xl">
-            Frequently Asked Questions
+            {copy.title}
           </h2>
           <p className="font-sans mt-4 max-w-xl px-5 text-center text-base font-light text-muted-foreground md:max-w-lg">
-            Everything you need to know about our interior design process and
-            services.
+            {copy.description}
           </p>
         </motion.div>
         {/* FAQs */}
@@ -57,7 +87,7 @@ export function FAQSection() {
             defaultValue="item-0"
             className="w-full space-y-4"
           >
-            {faqs.map((faq, index) => (
+            {copy.faqs.map((faq, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}

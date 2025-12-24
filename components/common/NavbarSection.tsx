@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
-import { motion } from "framer-motion"
+import * as motion from "motion/react-client"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
@@ -11,10 +11,12 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu"
 import Link from "next/link"
+import { useI18n } from "@/components/common/I18nProvider"
 
 export function NavbarSection() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const { locale, setLocale } = useI18n()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,35 +27,68 @@ export function NavbarSection() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const COMPANY_NAME = "FZ Concept"
-  const CTA_BUTTON_TEXT = "Book a Consultation"
-  const NavigationItem = [
-    {
-      title: "Home",
-      href: "/",
-      description: "Return to the homepage",
-    },
-    {
-      title: "Portfolio",
-      href: "/portfolio",
-      description: "View our projects",
-    },
-    {
-      title: "Services",
-      href: "/services",
-      description: "Our design services",
-    },
-    {
-      title: "About",
-      href: "/about",
-      description: "Learn about our studio",
-    },
-    {
-      title: "Contact",
-      href: "/contact",
-      description: "Get in touch",
-    },
-  ]
+  const copy =
+    locale === "fr"
+      ? {
+          companyName: "FZ Concept",
+          cta: "Réserver une consultation",
+          languageLabel: "Langue",
+          nav: [
+            { title: "Accueil", href: "/", description: "Retour à l’accueil" },
+            {
+              title: "Réalisations",
+              href: "/portfolio",
+              description: "Voir nos projets",
+            },
+            {
+              title: "Services",
+              href: "/services",
+              description: "Nos services de design",
+            },
+            {
+              title: "À propos",
+              href: "/about",
+              description: "Découvrir le studio",
+            },
+            {
+              title: "Contact",
+              href: "/contact",
+              description: "Nous contacter",
+            },
+          ],
+        }
+      : {
+          companyName: "FZ Concept",
+          cta: "Book a Consultation",
+          languageLabel: "Language",
+          nav: [
+            {
+              title: "Home",
+              href: "/",
+              description: "Return to the homepage",
+            },
+            {
+              title: "Our Work",
+              href: "/portfolio",
+              description: "View our projects",
+            },
+            {
+              title: "Services",
+              href: "/services",
+              description: "Our design services",
+            },
+            {
+              title: "About",
+              href: "/about",
+              description: "Learn about our studio",
+            },
+            {
+              title: "Contact",
+              href: "/contact",
+              description: "Get in touch",
+            },
+          ],
+        }
 
   return (
     <motion.nav
@@ -79,7 +114,7 @@ export function NavbarSection() {
               href="/"
               className={`text-2xl font-bold font-serif tracking-tight transition-colors text-primary`}
             >
-              {COMPANY_NAME}
+              {copy.companyName}
             </Link>
           </motion.div>
 
@@ -92,7 +127,7 @@ export function NavbarSection() {
           >
             <NavigationMenu>
               <NavigationMenuList>
-                {NavigationItem.map((section) => (
+                {copy.nav.map((section) => (
                   <NavigationMenuItem key={section.title}>
                     <NavigationMenuLink asChild>
                       <Link
@@ -109,16 +144,44 @@ export function NavbarSection() {
             </NavigationMenu>
           </motion.div>
 
-          {/* Desktop CTA Button */}
+          {/* Desktop Language + CTA */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="hidden md:flex items-center"
+            className="hidden md:flex items-center gap-4"
           >
+            <div
+              className="inline-flex items-center rounded-full border border-border bg-background/70 p-1"
+              role="group"
+              aria-label={copy.languageLabel}
+            >
+              <button
+                type="button"
+                onClick={() => setLocale("en")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+                  locale === "en"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground hover:text-gold"
+                }`}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLocale("fr")}
+                className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+                  locale === "fr"
+                    ? "bg-primary text-primary-foreground"
+                    : "text-foreground hover:text-gold"
+                }`}
+              >
+                FR
+              </button>
+            </div>
             <Link href="/contact">
               <Button className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
-                {CTA_BUTTON_TEXT}
+                {copy.cta}
               </Button>
             </Link>
           </motion.div>
@@ -133,8 +196,41 @@ export function NavbarSection() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <div className="flex flex-col space-y-4 mt-8 px-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      {copy.languageLabel}
+                    </span>
+                    <div
+                      className="inline-flex items-center rounded-full border border-border bg-background p-1"
+                      role="group"
+                      aria-label={copy.languageLabel}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setLocale("en")}
+                        className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+                          locale === "en"
+                            ? "bg-primary text-primary-foreground"
+                            : "text-foreground hover:text-gold"
+                        }`}
+                      >
+                        EN
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setLocale("fr")}
+                        className={`rounded-full px-3 py-1 text-xs font-semibold tracking-wide transition-colors ${
+                          locale === "fr"
+                            ? "bg-primary text-primary-foreground"
+                            : "text-foreground hover:text-gold"
+                        }`}
+                      >
+                        FR
+                      </button>
+                    </div>
+                  </div>
                   {/* Mobile Navigation Items */}
-                  {NavigationItem.map((section) => (
+                  {copy.nav.map((section) => (
                     <Link
                       key={section.title}
                       href={section.href}
@@ -154,7 +250,7 @@ export function NavbarSection() {
                   <div className="pt-4">
                     <Link href="/contact">
                       <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-6 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20">
-                        {CTA_BUTTON_TEXT}
+                        {copy.cta}
                       </Button>
                     </Link>
                   </div>

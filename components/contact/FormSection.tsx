@@ -7,12 +7,85 @@ import { scaleIn, slideInLeft } from "@/lib/animations"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
+import { useI18n } from "@/components/common/I18nProvider"
 
 export function FormSection() {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle")
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { locale } = useI18n()
+
+  const copy =
+    locale === "fr"
+      ? {
+          eyebrow: "Contact",
+          title: "Parlons de votre espace",
+          description:
+            "Partagez vos objectifs, votre calendrier et vos préférences. Nous répondrons avec des prochaines étapes claires et une consultation adaptée.",
+          locationTitle: "Marrakech, Maroc",
+          locationSubtitle: "Disponible partout au Maroc",
+          hours: "Lun–Sam, 9:00–18:00",
+          replyTime: "Réponse sous 24–48h",
+          fullName: "Nom complet",
+          fullNamePlaceholder: "Votre nom",
+          phoneOptional: "Téléphone (optionnel)",
+          email: "Email",
+          reason: "Motif de contact",
+          reasonPlaceholder: "Choisir un motif",
+          reasons: {
+            newProject: "Nouveau projet",
+            renovation: "Rénovation",
+            consultation: "Consultation",
+            partnership: "Partenariat",
+            press: "Presse",
+            other: "Autre",
+          },
+          projectLocation: "Lieu du projet",
+          projectLocationPlaceholder: "Marrakech, Casablanca…",
+          message: "Message",
+          messagePlaceholder:
+            "Décrivez votre espace, votre calendrier et vos objectifs.",
+          privacy: "J’accepte la Politique de confidentialité.",
+          sending: "Envoi…",
+          send: "Envoyer",
+          success: "Merci — votre message a bien été reçu. Réponse sous peu.",
+          error: "Une erreur est survenue. Veuillez réessayer.",
+        }
+      : {
+          eyebrow: "Contact",
+          title: "Let’s Talk About Your Space",
+          description:
+            "Share your goals, timeline, and style preferences. We’ll respond with clear next steps and a tailored consultation.",
+          locationTitle: "Marrakech, Morocco",
+          locationSubtitle: "Available across Morocco",
+          hours: "Mon–Sat, 9:00–18:00",
+          replyTime: "We reply within 24–48 hours",
+          fullName: "Full name",
+          fullNamePlaceholder: "Your name",
+          phoneOptional: "Phone (optional)",
+          email: "Email",
+          reason: "Reason for contact",
+          reasonPlaceholder: "Select a reason",
+          reasons: {
+            newProject: "New Project",
+            renovation: "Renovation",
+            consultation: "Consultation",
+            partnership: "Partnership",
+            press: "Press",
+            other: "Other",
+          },
+          projectLocation: "Project location",
+          projectLocationPlaceholder: "Marrakech, Casablanca...",
+          message: "Message",
+          messagePlaceholder:
+            "Tell us about your space, timeline, and what you’d love to achieve.",
+          privacy: "I agree to the Privacy Policy.",
+          sending: "Sending...",
+          send: "Send Message",
+          success: "Thanks — we received your message and will reply shortly.",
+          error: "Something went wrong. Please try again.",
+        }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -45,7 +118,7 @@ export function FormSection() {
           | { error?: string }
           | null
         setStatus("error")
-        setErrorMessage(data?.error ?? "Something went wrong. Please try again.")
+        setErrorMessage(data?.error ?? copy.error)
         return
       }
 
@@ -53,7 +126,7 @@ export function FormSection() {
       form.reset()
     } catch {
       setStatus("error")
-      setErrorMessage("Something went wrong. Please try again.")
+      setErrorMessage(copy.error)
     }
   }
 
@@ -70,15 +143,14 @@ export function FormSection() {
             <div className="mb-4 flex items-center">
               <div className="mr-4 w-10 border-t border-gold" />
               <p className="text-sm font-medium font-sans text-gold uppercase tracking-wider">
-                Contact
+                {copy.eyebrow}
               </p>
             </div>
             <h2 className="text-4xl font-bold font-serif text-primary md:text-5xl">
-              Let’s Talk About Your Space
+              {copy.title}
             </h2>
             <p className="mt-4 max-w-xl font-sans text-muted-foreground">
-              Share your goals, timeline, and style preferences. We’ll respond
-              with clear next steps and a tailored consultation.
+              {copy.description}
             </p>
 
             <div className="mt-10 grid gap-4">
@@ -86,10 +158,10 @@ export function FormSection() {
                 <MapPin className="mt-0.5 h-5 w-5 text-gold" />
                 <div>
                   <p className="font-serif font-semibold text-foreground">
-                    Marrakech, Morocco
+                    {copy.locationTitle}
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
-                    Available across Morocco
+                    {copy.locationSubtitle}
                   </p>
                 </div>
               </div>
@@ -100,7 +172,7 @@ export function FormSection() {
                     +212 5 00 00 00 00
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
-                    Mon–Sat, 9:00–18:00
+                    {copy.hours}
                   </p>
                 </div>
               </div>
@@ -111,7 +183,7 @@ export function FormSection() {
                     info@fzconcept.com
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
-                    We reply within 24–48 hours
+                    {copy.replyTime}
                   </p>
                 </div>
               </div>
@@ -136,19 +208,19 @@ export function FormSection() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-medium font-sans text-foreground">
-                    Full name
+                    {copy.fullName}
                   </label>
                   <input
                     name="name"
                     type="text"
                     required
                     className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    placeholder="Your name"
+                    placeholder={copy.fullNamePlaceholder}
                   />
                 </div>
                 <div>
                   <label className="text-sm font-medium font-sans text-foreground">
-                    Phone (optional)
+                    {copy.phoneOptional}
                   </label>
                   <input
                     name="phone"
@@ -161,7 +233,7 @@ export function FormSection() {
 
               <div>
                 <label className="text-sm font-medium font-sans text-foreground">
-                  Email
+                  {copy.email}
                 </label>
                 <input
                   name="email"
@@ -175,7 +247,7 @@ export function FormSection() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label className="text-sm font-medium font-sans text-foreground">
-                    Reason for contact
+                    {copy.reason}
                   </label>
                   <select
                     name="reason"
@@ -184,40 +256,44 @@ export function FormSection() {
                     className="mt-2 w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
                   >
                     <option value="" disabled>
-                      Select a reason
+                      {copy.reasonPlaceholder}
                     </option>
-                    <option value="new-project">New Project</option>
-                    <option value="renovation">Renovation</option>
-                    <option value="consultation">Consultation</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="press">Press</option>
-                    <option value="other">Other</option>
+                    <option value="new-project">{copy.reasons.newProject}</option>
+                    <option value="renovation">{copy.reasons.renovation}</option>
+                    <option value="consultation">
+                      {copy.reasons.consultation}
+                    </option>
+                    <option value="partnership">
+                      {copy.reasons.partnership}
+                    </option>
+                    <option value="press">{copy.reasons.press}</option>
+                    <option value="other">{copy.reasons.other}</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="text-sm font-medium font-sans text-foreground">
-                    Project location
+                    {copy.projectLocation}
                   </label>
                   <input
                     name="location"
                     type="text"
                     className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    placeholder="Marrakech, Casablanca..."
+                    placeholder={copy.projectLocationPlaceholder}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="text-sm font-medium font-sans text-foreground">
-                  Message
+                  {copy.message}
                 </label>
                 <textarea
                   name="message"
                   required
                   rows={6}
                   className="mt-2 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  placeholder="Tell us about your space, timeline, and what you’d love to achieve."
+                  placeholder={copy.messagePlaceholder}
                 />
               </div>
 
@@ -228,7 +304,7 @@ export function FormSection() {
                   className="mt-1 h-4 w-4 rounded border-border text-primary"
                 />
                 <span className="text-sm font-sans text-muted-foreground">
-                  I agree to the Privacy Policy.
+                  {copy.privacy}
                 </span>
               </label>
 
@@ -237,15 +313,15 @@ export function FormSection() {
                   className="h-12 rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
                   disabled={status === "submitting"}
                 >
-                  {status === "submitting" ? "Sending..." : "Send Message"}
+                  {status === "submitting" ? copy.sending : copy.send}
                 </Button>
                 {status === "success" ? (
                   <p className="text-center text-sm font-sans text-muted-foreground">
-                    Thanks — we received your message and will reply shortly.
+                    {copy.success}
                   </p>
                 ) : status === "error" ? (
                   <p className="text-center text-sm font-sans text-destructive">
-                    {errorMessage ?? "Something went wrong. Please try again."}
+                    {errorMessage ?? copy.error}
                   </p>
                 ) : null}
               </div>

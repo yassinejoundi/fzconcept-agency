@@ -7,11 +7,21 @@ import { ServicesSection } from "@/components/home/ServicesSection"
 import { DeliverablesSection } from "@/components/services/DeliverablesSection"
 import { FAQSection } from "@/components/services/FAQSection"
 import { CTASection } from "@/components/home/CTASection"
+import { getRequestLocale } from "@/lib/locale.server"
 
-export const metadata: Metadata = {
-  title: "Services | FZ Concept",
-  description:
-    "Discover FZ Concept’s interior design services: consultation, concept design, renovation, styling, and turnkey execution.",
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale()
+  return locale === "fr"
+    ? {
+        title: "Services | FZ Concept",
+        description:
+          "Découvrez les services FZ Concept : consultation, concept design, rénovation, styling et exécution clé en main.",
+      }
+    : {
+        title: "Services | FZ Concept",
+        description:
+          "Discover FZ Concept’s interior design services: consultation, concept design, renovation, styling, and turnkey execution.",
+      }
 }
 
 export default function ServicesPage() {

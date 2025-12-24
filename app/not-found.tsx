@@ -5,10 +5,40 @@ import { Home, Mail, ArrowLeft } from "lucide-react"
 import * as motion from "motion/react-client"
 
 import { NavbarSection } from "@/components/common/NavbarSection"
+import { useI18n } from "@/components/common/I18nProvider"
 import { Button } from "@/components/ui/button"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export default function NotFound() {
+  const { locale } = useI18n()
+  const copy =
+    locale === "fr"
+      ? {
+          badge: "Introuvable",
+          title: "Cette page n’existe pas",
+          description:
+            "Le lien est peut-être incorrect, ou la page a été déplacée. Revenons à un endroit inspirant.",
+          backHome: "Retour à l’accueil",
+          exploreServices: "Découvrir les services",
+          contactUs: "Nous contacter",
+          inspirationTitle: "Besoin d’inspiration ?",
+          inspirationText:
+            "Parcourez notre portfolio : héritage marocain et luxe moderne.",
+          viewPortfolio: "Voir le portfolio",
+        }
+      : {
+          badge: "Not Found",
+          title: "This page doesn't exist",
+          description:
+            "The link may be broken, or the page may have moved. Let's get you back to a beautiful place.",
+          backHome: "Back Home",
+          exploreServices: "Explore Services",
+          contactUs: "Contact Us",
+          inspirationTitle: "Looking for inspiration?",
+          inspirationText:
+            "Browse our portfolio to see Moroccan heritage paired with modern luxury.",
+          viewPortfolio: "View Portfolio",
+        }
   return (
     <div>
       <NavbarSection />
@@ -31,7 +61,7 @@ export default function NotFound() {
                 variants={fadeInUp}
               >
                 <span className="text-sm font-medium text-primary tracking-wide uppercase">
-                  Not Found
+                  {copy.badge}
                 </span>
                 <span className="h-1.5 w-1.5 rounded-full bg-gold" />
                 <span className="text-sm font-medium text-gold tracking-wide">
@@ -43,15 +73,14 @@ export default function NotFound() {
                 className="mt-6 font-serif text-5xl font-bold leading-tight text-foreground md:text-7xl"
                 variants={fadeInUp}
               >
-                This page doesn&apos;t exist
+                {copy.title}
               </motion.h1>
 
               <motion.p
                 className="mt-4 font-sans text-muted-foreground md:text-lg"
                 variants={fadeInUp}
               >
-                The link may be broken, or the page may have moved. Let&apos;s
-                get you back to a beautiful place.
+                {copy.description}
               </motion.p>
 
               <motion.div
@@ -65,7 +94,7 @@ export default function NotFound() {
                 >
                   <Link href="/">
                     <Home className="mr-2 h-5 w-5" />
-                    Back Home
+                    {copy.backHome}
                   </Link>
                 </Button>
 
@@ -77,7 +106,7 @@ export default function NotFound() {
                 >
                   <Link href="/services">
                     <ArrowLeft className="mr-2 h-5 w-5" />
-                    Explore Services
+                    {copy.exploreServices}
                   </Link>
                 </Button>
 
@@ -89,7 +118,7 @@ export default function NotFound() {
                 >
                   <Link href="/contact">
                     <Mail className="mr-2 h-5 w-5" />
-                    Contact Us
+                    {copy.contactUs}
                   </Link>
                 </Button>
               </motion.div>
@@ -99,18 +128,17 @@ export default function NotFound() {
                 variants={fadeInUp}
               >
                 <p className="font-serif text-lg font-semibold text-foreground">
-                  Looking for inspiration?
+                  {copy.inspirationTitle}
                 </p>
                 <p className="mt-2 font-sans text-sm text-muted-foreground">
-                  Browse our portfolio to see Moroccan heritage paired with
-                  modern luxury.
+                  {copy.inspirationText}
                 </p>
                 <div className="mt-5">
                   <Button
                     asChild
                     className="rounded-xl bg-gold text-white shadow-md transition-all hover:bg-gold/90"
                   >
-                    <Link href="/portfolio">View Portfolio</Link>
+                    <Link href="/portfolio">{copy.viewPortfolio}</Link>
                   </Button>
                 </div>
               </motion.div>

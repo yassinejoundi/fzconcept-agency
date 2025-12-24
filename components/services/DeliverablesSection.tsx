@@ -1,16 +1,78 @@
 import { CheckCircle2 } from "lucide-react"
 import * as motion from "motion/react-client"
 import { scaleIn, slideInLeft } from "@/lib/animations"
+import { getRequestLocale } from "@/lib/locale.server"
 
-export function DeliverablesSection() {
-  const deliverables = [
-    "Mood boards and concept direction",
-    "Material, color, and finish selections",
-    "Space planning and furniture layouts",
-    "3D visualization for key areas",
-    "Sourcing and procurement guidance",
-    "Final styling and on-site detailing",
-  ] as const
+export async function DeliverablesSection() {
+  const locale = await getRequestLocale()
+  const copy =
+    locale === "fr"
+      ? {
+          eyebrow: "Livrables",
+          title: "Ce que vous recevez",
+          description:
+            "Un processus premium et structuré, avec des sélections soignées et une exécution claire pour savoir à chaque étape ce qui suit.",
+          deliverables: [
+            "Mood boards et direction concept",
+            "Sélection matériaux, couleurs et finitions",
+            "Planification d’espace et layouts mobilier",
+            "Visualisation 3D des zones clés",
+            "Conseils sourcing et achats",
+            "Styling final et détails sur site",
+          ] as const,
+          standardsEyebrow: "Standards signature",
+          standardsTitle: "La promesse FZ Concept",
+          standards: [
+            {
+              title: "Matériaux sélectionnés",
+              description:
+                "Textures naturelles, palettes raffinées et finitions choisies pour durer.",
+            },
+            {
+              title: "Artisanat",
+              description:
+                "Un savoir-faire marocain authentique intégré à des détails contemporains.",
+            },
+            {
+              title: "Exécution élevée",
+              description:
+                "Délais clairs, standards exigeants et coordination minutieuse sur site.",
+            },
+          ],
+        }
+      : {
+          eyebrow: "Deliverables",
+          title: "What You Receive",
+          description:
+            "A premium, structured process with curated selections and clear execution so you always know what comes next.",
+          deliverables: [
+            "Mood boards and concept direction",
+            "Material, color, and finish selections",
+            "Space planning and furniture layouts",
+            "3D visualization for key areas",
+            "Sourcing and procurement guidance",
+            "Final styling and on-site detailing",
+          ] as const,
+          standardsEyebrow: "Signature Standards",
+          standardsTitle: "The FZ Concept Promise",
+          standards: [
+            {
+              title: "Curated Materials",
+              description:
+                "Natural textures, refined palettes, and finishes chosen for longevity.",
+            },
+            {
+              title: "Artisan Craft",
+              description:
+                "Authentic Moroccan artistry integrated with modern details.",
+            },
+            {
+              title: "Elevated Execution",
+              description:
+                "Clear timelines, high standards, and meticulous on-site coordination.",
+            },
+          ],
+        }
 
   return (
     <section className="bg-muted/30">
@@ -23,17 +85,16 @@ export function DeliverablesSection() {
             variants={slideInLeft}
           >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
-              Deliverables
+              {copy.eyebrow}
             </p>
             <h2 className="mt-2 text-3xl font-bold font-serif text-primary md:text-5xl">
-              What You Receive
+              {copy.title}
             </h2>
             <p className="mt-4 font-sans text-muted-foreground max-w-xl">
-              A premium, structured process with curated selections and clear
-              execution so you always know what comes next.
+              {copy.description}
             </p>
             <div className="mt-8 grid gap-3">
-              {deliverables.map((item) => (
+              {copy.deliverables.map((item) => (
                 <div key={item} className="flex items-start gap-3">
                   <CheckCircle2 className="mt-0.5 h-5 w-5 text-gold" />
                   <p className="font-sans text-sm text-foreground">{item}</p>
@@ -50,38 +111,22 @@ export function DeliverablesSection() {
             variants={scaleIn}
           >
             <p className="text-sm font-bold uppercase text-gold tracking-widest">
-              Signature Standards
+              {copy.standardsEyebrow}
             </p>
             <h3 className="mt-2 text-2xl font-bold font-serif text-foreground">
-              The FZ Concept Promise
+              {copy.standardsTitle}
             </h3>
             <div className="mt-6 grid gap-4">
-              <div className="rounded-xl bg-secondary/50 p-5">
-                <p className="font-serif font-semibold text-primary">
-                  Curated Materials
-                </p>
-                <p className="mt-2 font-sans text-sm text-muted-foreground">
-                  Natural textures, refined palettes, and finishes chosen for
-                  longevity.
-                </p>
-              </div>
-              <div className="rounded-xl bg-secondary/50 p-5">
-                <p className="font-serif font-semibold text-primary">
-                  Artisan Craft
-                </p>
-                <p className="mt-2 font-sans text-sm text-muted-foreground">
-                  Authentic Moroccan artistry integrated with modern details.
-                </p>
-              </div>
-              <div className="rounded-xl bg-secondary/50 p-5">
-                <p className="font-serif font-semibold text-primary">
-                  Elevated Execution
-                </p>
-                <p className="mt-2 font-sans text-sm text-muted-foreground">
-                  Clear timelines, high standards, and meticulous on-site
-                  coordination.
-                </p>
-              </div>
+              {copy.standards.map((s) => (
+                <div key={s.title} className="rounded-xl bg-secondary/50 p-5">
+                  <p className="font-serif font-semibold text-primary">
+                    {s.title}
+                  </p>
+                  <p className="mt-2 font-sans text-sm text-muted-foreground">
+                    {s.description}
+                  </p>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>

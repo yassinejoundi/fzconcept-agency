@@ -10,9 +10,66 @@ import {
   MapPin,
   Phone,
 } from "lucide-react"
+import { useI18n } from "@/components/common/I18nProvider"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const { locale } = useI18n()
+
+  const copy =
+    locale === "fr"
+      ? {
+          brandBlurb:
+            "Sublimer les espaces avec l’héritage marocain et le luxe moderne. Nous créons des intérieurs qui racontent votre histoire.",
+          quickLinks: "Liens rapides",
+          services: "Services",
+          contactUs: "Contact",
+          links: {
+            home: "Accueil",
+            about: "À propos",
+            portfolio: "Portfolio",
+            services: "Services",
+            contact: "Contact",
+            privacy: "Politique de confidentialité",
+            terms: "Conditions d’utilisation",
+          },
+          serviceItems: [
+            "Design d’intérieur",
+            "Planification d’espace",
+            "Sélection de mobilier",
+            "Rénovation",
+            "Consultation",
+          ],
+          address: ["123 Luxury Avenue, Hivernage", "Marrakech, Maroc"],
+          rights: "Tous droits réservés.",
+          createdBy: "Créé par",
+        }
+      : {
+          brandBlurb:
+            "Elevating spaces with Moroccan heritage and modern luxury. We create interiors that tell your unique story.",
+          quickLinks: "Quick Links",
+          services: "Services",
+          contactUs: "Contact Us",
+          links: {
+            home: "Home",
+            about: "About Us",
+            portfolio: "Portfolio",
+            services: "Services",
+            contact: "Contact",
+            privacy: "Privacy Policy",
+            terms: "Terms of Service",
+          },
+          serviceItems: [
+            "Interior Design",
+            "Space Planning",
+            "Furniture Selection",
+            "Renovation",
+            "Consultation",
+          ],
+          address: ["123 Luxury Avenue, Hivernage", "Marrakech, Morocco"],
+          rights: "All rights reserved.",
+          createdBy: "Created by",
+        }
 
   return (
     <footer className="bg-foreground text-white">
@@ -28,8 +85,7 @@ export function Footer() {
               FZ Concept
             </Link>
             <p className="text-white/70 font-sans max-w-xs">
-              Elevating spaces with Moroccan heritage and modern luxury. We
-              create interiors that tell your unique story.
+              {copy.brandBlurb}
             </p>
             <div className="flex gap-4">
               <a
@@ -63,12 +119,12 @@ export function Footer() {
           {/* Quick Links */}
           <div>
             <h4 className="mb-6 text-lg font-bold font-serif text-gold">
-              Quick Links
+              {copy.quickLinks}
             </h4>
             <ul className="flex flex-col gap-4 font-sans text-white/80">
               <li>
                 <Link href="/" className="transition-colors hover:text-gold">
-                  Home
+                  {copy.links.home}
                 </Link>
               </li>
               <li>
@@ -76,7 +132,7 @@ export function Footer() {
                   href="/about"
                   className="transition-colors hover:text-gold"
                 >
-                  About Us
+                  {copy.links.about}
                 </Link>
               </li>
               <li>
@@ -84,7 +140,7 @@ export function Footer() {
                   href="/portfolio"
                   className="transition-colors hover:text-gold"
                 >
-                  Portfolio
+                  {copy.links.portfolio}
                 </Link>
               </li>
               <li>
@@ -92,7 +148,7 @@ export function Footer() {
                   href="/services"
                   className="transition-colors hover:text-gold"
                 >
-                  Services
+                  {copy.links.services}
                 </Link>
               </li>
               <li>
@@ -100,7 +156,7 @@ export function Footer() {
                   href="/contact"
                   className="transition-colors hover:text-gold"
                 >
-                  Contact
+                  {copy.links.contact}
                 </Link>
               </li>
             </ul>
@@ -109,64 +165,34 @@ export function Footer() {
           {/* Services */}
           <div>
             <h4 className="mb-6 text-lg font-bold font-serif text-gold">
-              Services
+              {copy.services}
             </h4>
             <ul className="flex flex-col gap-4 font-sans text-white/80">
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gold"
-                >
-                  Interior Design
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gold"
-                >
-                  Space Planning
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gold"
-                >
-                  Furniture Selection
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gold"
-                >
-                  Renovation
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gold"
-                >
-                  Consultation
-                </Link>
-              </li>
+              {copy.serviceItems.map((item) => (
+                <li key={item}>
+                  <Link
+                    href="/services"
+                    className="transition-colors hover:text-gold"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact */}
           <div>
             <h4 className="mb-6 text-lg font-bold font-serif text-gold">
-              Contact Us
+              {copy.contactUs}
             </h4>
             <ul className="flex flex-col gap-6 font-sans text-white/80">
               <li className="flex items-start gap-3">
                 <MapPin className="h-6 w-6 shrink-0 text-gold" />
                 <span>
-                  123 Luxury Avenue, Hivernage
+                  {copy.address[0]}
                   <br />
-                  Marrakech, Morocco
+                  {copy.address[1]}
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -196,7 +222,7 @@ export function Footer() {
       <div className="border-t border-white/10 bg-black/20 py-6">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 text-center text-sm text-white/50 md:flex-row md:px-10 md:text-left font-sans">
           <p>
-            &copy; {currentYear} FZ Concept. All rights reserved. | Created by{" "}
+            &copy; {currentYear} FZ Concept. {copy.rights} | {copy.createdBy}{" "}
             <a
               href="https://yassinejoundi.com"
               target="_blank"
@@ -211,13 +237,13 @@ export function Footer() {
               href="/privacy-policy"
               className="hover:text-white transition-colors"
             >
-              Privacy Policy
+              {copy.links.privacy}
             </Link>
             <Link
               href="/terms-of-service"
               className="hover:text-white transition-colors"
             >
-              Terms of Service
+              {copy.links.terms}
             </Link>
           </div>
         </div>

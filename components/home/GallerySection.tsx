@@ -13,11 +13,30 @@ import {
 import { cn } from "@/lib/utils"
 import * as motion from "motion/react-client"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { useI18n } from "@/components/common/I18nProvider"
 
 export function GallerySection() {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
   const [count, setCount] = React.useState(0)
+  const { locale } = useI18n()
+
+  const copy =
+    locale === "fr"
+      ? {
+          title: "Nos réalisations",
+          description:
+            "Découvrez une sélection de nos projets de design d’intérieur, reflet de notre exigence du luxe et du détail.",
+          imageAlt: (index: number) => `Projet de design d’intérieur ${index + 1}`,
+          goToSlide: (index: number) => `Aller à la diapositive ${index + 1}`,
+        }
+      : {
+          title: "Our Masterpieces",
+          description:
+            "Explore a curated selection of our finest interior design projects, showcasing our commitment to luxury and detail.",
+          imageAlt: (index: number) => `Interior Design Project ${index + 1}`,
+          goToSlide: (index: number) => `Go to slide ${index + 1}`,
+        }
 
   React.useEffect(() => {
     if (!api) {
@@ -56,11 +75,10 @@ export function GallerySection() {
           {/* Hero Title */}
           <motion.div className="max-w-3xl" variants={fadeInUp}>
             <h1 className="m-5 text-center text-3xl font-bold font-serif text-primary sm:text-4xl md:text-5xl lg:text-6xl">
-              Our Masterpieces
+              {copy.title}
             </h1>
             <p className="mx-auto mb-6 text-center text-sm font-sans text-muted-foreground sm:px-8 sm:text-xl md:px-24 lg:mb-8">
-              Explore a curated selection of our finest interior design
-              projects, showcasing our commitment to luxury and detail.
+              {copy.description}
             </p>
           </motion.div>
         </div>
@@ -84,7 +102,7 @@ export function GallerySection() {
                   <div className="relative aspect-[4/3] overflow-hidden rounded-2xl group">
                     <Image
                       src={src}
-                      alt={`Interior Design Project ${index + 1}`}
+                      alt={copy.imageAlt(index)}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -115,7 +133,7 @@ export function GallerySection() {
                         ? "w-8 bg-primary"
                         : "w-2 bg-primary/30 hover:bg-primary/50"
                     )}
-                    aria-label={`Go to slide ${index + 1}`}
+                    aria-label={copy.goToSlide(index)}
                   />
                 ))}
               </div>

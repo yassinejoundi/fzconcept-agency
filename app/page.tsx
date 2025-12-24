@@ -1,5 +1,3 @@
-"use client"
-
 import { NavbarSection } from "@/components/common/NavbarSection"
 import { HeroSection } from "@/components/home/HeroSection"
 import { ApproachSection } from "@/components/home/ApproachSection"

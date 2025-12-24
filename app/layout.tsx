@@ -14,25 +14,40 @@ const merriweatherSans = Merriweather_Sans({
   weight: ["400", "500", "600", "700"], // regular, medium, semibold, and bold
 })
 
-export const metadata: Metadata = {
-  title: "FZConcept Agency",
-  description: "FZConcept Agency",
+import { Footer } from "@/components/common/Footer"
+import { I18nProvider } from "@/components/common/I18nProvider"
+import { getRequestLocale } from "@/lib/locale.server"
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getRequestLocale()
+  return locale === "fr"
+    ? {
+        title: "FZ Concept — Design d’intérieur au Maroc",
+        description:
+          "FZ Concept est un studio marocain de design d’intérieur et redesign haut de gamme.",
+      }
+    : {
+        title: "FZ Concept — Interior Design in Morocco",
+        description:
+          "FZ Concept is a Moroccan interior design and redesign studio for premium spaces.",
+      }
 }
 
-import { Footer } from "@/components/common/Footer"
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const locale = await getRequestLocale()
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${fraunces.variable} ${merriweatherSans.variable} antialiased`}
       >
-        {children}
-        <Footer />
+        <I18nProvider initialLocale={locale}>
+          {children}
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   )
