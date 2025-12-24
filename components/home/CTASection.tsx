@@ -45,7 +45,7 @@ export function CTASection() {
             asChild
             variant="outline"
             size="lg"
-            className="h-14 rounded-full border-white/30 bg-transparent px-8 text-lg font-semibold text-white hover:bg-white/10 transition-all"
+            className="h-14 rounded-full border-white/30 bg-transparent px-8 text-lg font-semibold text-white hover:bg-white transition-all"
           >
             <Link href="/portfolio">View Portfolio</Link>
           </Button>
