@@ -9,6 +9,8 @@ import {
   ExternalLink,
 } from "lucide-react"
 import * as motion from "motion/react-client"
+import Image from "next/image"
+import logo from "@/assets/images/fzconcept-logo.png"
 import { useI18n } from "@/components/common/I18nProvider"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
 
@@ -17,15 +19,15 @@ export function LinksList() {
 
   const links = [
     {
-      label: "+212 5 00 00 00 00",
+      label: "+212 7 77 77 99 09",
       icon: Phone,
-      href: "tel:+212500000000",
+      href: "tel:+212777779909",
       type: "external",
     },
     {
       label: "WhatsApp",
       icon: MessageCircle,
-      href: "https://wa.me/212500000000",
+      href: "https://wa.me/212777779909",
       type: "external",
     },
     {
@@ -58,8 +60,15 @@ export function LinksList() {
       {/* Header / Brand */}
       <motion.div className="mb-10 text-center" variants={fadeInUp}>
         <div className="mb-4 flex justify-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gold/10 ring-1 ring-gold/30">
-            <span className="font-serif text-3xl font-bold text-gold">FZ</span>
+          <div className="relative h-28 w-28 overflow-hidden rounded-full border-2 border-gold bg-white shadow-xl shadow-gold/20">
+            <Image
+              src={logo}
+              alt="FZ Concept Logo"
+              fill
+              className="object-center object-cover rounded-full"
+              sizes="112px"
+              priority
+            />
           </div>
         </div>
         <h1 className="font-serif text-2xl font-bold text-foreground">
