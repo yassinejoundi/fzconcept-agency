@@ -40,7 +40,7 @@ export function Footer() {
             "Rénovation",
             "Consultation",
           ],
-          address: ["123 Luxury Avenue, Hivernage", "Marrakech, Maroc"],
+          address: "Marrakech, Maroc",
           rights: "Tous droits réservés.",
           createdBy: "Créé par",
         }
@@ -66,7 +66,7 @@ export function Footer() {
             "Renovation",
             "Consultation",
           ],
-          address: ["123 Luxury Avenue, Hivernage", "Marrakech, Morocco"],
+          address: "Marrakech, Morocco",
           rights: "All rights reserved.",
           createdBy: "Created by",
         }
@@ -189,28 +189,24 @@ export function Footer() {
             <ul className="flex flex-col gap-6 font-sans text-white/80">
               <li className="flex items-start gap-3">
                 <MapPin className="h-6 w-6 shrink-0 text-gold" />
-                <span>
-                  {copy.address[0]}
-                  <br />
-                  {copy.address[1]}
-                </span>
+                <span>{copy.address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 shrink-0 text-gold" />
                 <a
-                  href="tel:+212500000000"
+                  href="tel:+212777779909"
                   className="hover:text-gold transition-colors"
                 >
-                  +212 5 00 00 00 00
+                  +212 7 77 77 99 09
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 shrink-0 text-gold" />
                 <a
-                  href="mailto:info@fzconcept.com"
+                  href="mailto:contact@fzconcept.agency"
                   className="hover:text-gold transition-colors"
                 >
-                  info@fzconcept.com
+                  contact@fzconcept.agency
                 </a>
               </li>
             </ul>

@@ -37,9 +37,9 @@ export function LinksList() {
       type: "external",
     },
     {
-      label: "info@fzconcept.com",
+      label: "contact@fzconcept.agency",
       icon: Mail,
-      href: "mailto:info@fzconcept.com",
+      href: "mailto:contact@fzconcept.agency",
       type: "external",
     },
     {
