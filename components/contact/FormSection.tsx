@@ -171,7 +171,7 @@ export function FormSection() {
                 <Phone className="mt-0.5 h-5 w-5 text-gold" />
                 <div>
                   <p className="font-serif font-semibold text-foreground">
-                    +212 5 00 00 00 00
+                    +212 7 77 77 99 09
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
                     {copy.hours}
@@ -182,7 +182,7 @@ export function FormSection() {
                 <Mail className="mt-0.5 h-5 w-5 text-gold" />
                 <div>
                   <p className="font-serif font-semibold text-foreground">
-                    info@fzconcept.com
+                    contact@fzconcept.com
                   </p>
                   <p className="font-sans text-sm text-muted-foreground">
                     {copy.replyTime}
