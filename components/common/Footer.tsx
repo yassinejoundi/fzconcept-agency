@@ -39,7 +39,7 @@ export function Footer() {
       </div>
       <div className="fz-shell fz-footer-bottom">
         <span>© {new Date().getFullYear()} FZ Concept</span>
-        <span>{fr ? "Conçu avec intention à Marrakech" : "Designed with intention in Marrakech"}</span>
+        <span className="fz-footer-credit">{fr ? "Site réalisé par " : "Website by "}<a href="https://yassinejoundi.com" target="_blank" rel="noopener noreferrer">Yassine Joundi</a></span>
         <div>
           <Link href="/privacy-policy">{fr ? "Confidentialité" : "Privacy"}</Link>
           <Link href="/terms-of-service">{fr ? "Conditions d’utilisation" : "Terms"}</Link>

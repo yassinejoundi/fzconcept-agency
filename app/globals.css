@@ -439,6 +439,7 @@
 .fz-footer-bottom { display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid #5d3c3d; padding-block: 25px; color: #bba59d; font-size: .75rem; }
 .fz-footer-bottom div { display: flex; gap: 25px; }
 .fz-footer-bottom a:hover { color: white; }
+.fz-footer-credit a { color: var(--fz-paper); text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 1200px) {
   .fz-shell { width: min(100% - 64px, 1440px); }
