@@ -1,11 +1,7 @@
-import { createClient } from "@supabase/supabase-js"
-import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-import {
-  getAdminCookieName,
-  verifyAdminSessionCookieValue,
-} from "@/lib/adminSession"
+import { getAdminSession } from "@/lib/adminAuth"
+import { getDatabase } from "@/lib/db"
 
 function normalize(value: string) {
   return value.trim().replace(/\s+/g, " ")
@@ -42,25 +38,6 @@ function isAllowedOrigin(request: Request) {
   return getAllowedOrigins(request).has(origin)
 }
 
-function getSupabaseClient() {
-  const supabaseUrl =
-    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-
-  if (!supabaseUrl || !supabaseKey) return null
-  return createClient(supabaseUrl, supabaseKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
-}
-
-async function getAdminSession() {
-  const secret = process.env.ADMIN_SESSION_SECRET ?? ""
-  if (!secret) return null
-  const value = (await cookies()).get(getAdminCookieName())?.value ?? ""
-  if (!value) return null
-  return verifyAdminSessionCookieValue(value, secret)
-}
-
 export async function GET(request: Request) {
   if (!isAllowedOrigin(request)) {
     return NextResponse.json(
@@ -77,50 +54,35 @@ export async function GET(request: Request) {
     )
   }
 
-  const supabase = getSupabaseClient()
-  if (!supabase) {
-    return NextResponse.json(
-      { ok: false, error: "Missing SUPABASE_SERVICE_ROLE_KEY." },
-      { status: 500 }
-    )
-  }
-
   const url = new URL(request.url)
   const id = normalize(url.searchParams.get("id") ?? "")
   const limitRaw = normalize(url.searchParams.get("limit") ?? "50")
   const limit = Math.max(1, Math.min(200, Number(limitRaw) || 50))
 
-  if (id) {
-    const { data, error } = await supabase
-      .from("contact_submissions")
-      .select(
-        "id,created_at,name,email,phone,reason,location,message,page_url,ip_address,user_agent"
-      )
-      .eq("id", id)
-      .maybeSingle()
+  try {
+    const sql = getDatabase()
+    if (id) {
+      const rows = await sql`select
+        id, created_at, name, email, phone, reason, location, message, page_url,
+        ip_address, user_agent
+        from public.contact_submissions where id = ${id} limit 1`
 
-    if (error) {
       return NextResponse.json(
-        { ok: false, error: "Failed to load message." },
-        { status: 500 }
+        { ok: true, message: rows[0] ?? null },
+        { status: 200 }
       )
     }
 
-    return NextResponse.json({ ok: true, message: data }, { status: 200 })
-  }
+    const messages = await sql`select
+      id, created_at, name, email, phone, reason, location, message, page_url
+      from public.contact_submissions
+      order by created_at desc limit ${limit}`
 
-  const { data, error } = await supabase
-    .from("contact_submissions")
-    .select("id,created_at,name,email,phone,reason,location,message,page_url")
-    .order("created_at", { ascending: false })
-    .limit(limit)
-
-  if (error) {
+    return NextResponse.json({ ok: true, messages }, { status: 200 })
+  } catch {
     return NextResponse.json(
       { ok: false, error: "Failed to load messages." },
       { status: 500 }
     )
   }
-
-  return NextResponse.json({ ok: true, messages: data }, { status: 200 })
 }

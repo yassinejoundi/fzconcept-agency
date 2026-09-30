@@ -1,5 +1,6 @@
-import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
+
+import { getDatabase } from "@/lib/db"
 
 type ContactSubmissionPayload = {
   name: string
@@ -15,18 +16,6 @@ type RateLimitRecord = { count: number; resetAt: number }
 
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
 const RATE_LIMIT_MAX_REQUESTS = 10
-
-function getClient() {
-  const supabaseUrl =
-    process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY
-
-  if (!supabaseUrl || !supabaseKey) return null
-
-  return createClient(supabaseUrl, supabaseKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
-}
 
 function isValidEmail(value: string) {
   return /^\S+@\S+\.\S+$/.test(value)
@@ -124,8 +113,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const supabase = getClient()
-  if (!supabase) {
+  if (!process.env.DATABASE_URL) {
     return NextResponse.json(
       { ok: false, error: "Server configuration error." },
       { status: 500 }
@@ -197,21 +185,15 @@ export async function POST(request: Request) {
 
   const pageUrl = request.headers.get("referer") ?? ""
 
-  const { error } = await supabase.from("contact_submissions").insert([
-    {
-      name,
-      email,
-      phone: phone || null,
-      reason: reason || null,
-      location: location || null,
-      message,
-      ip_address: ipAddress || null,
-      user_agent: userAgent || null,
-      page_url: pageUrl || null,
-    },
-  ])
-
-  if (error) {
+  try {
+    const sql = getDatabase()
+    await sql`insert into public.contact_submissions (
+      name, email, phone, reason, location, message, ip_address, user_agent, page_url
+    ) values (
+      ${name}, ${email}, ${phone || null}, ${reason || null}, ${location || null},
+      ${message}, ${ipAddress || null}, ${userAgent || null}, ${pageUrl || null}
+    )`
+  } catch {
     return NextResponse.json(
       { ok: false, error: "Failed to save your message." },
       { status: 500 }

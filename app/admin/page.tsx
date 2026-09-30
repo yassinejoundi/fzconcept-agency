@@ -9,6 +9,7 @@ import * as motion from "motion/react-client"
 import { NavbarSection } from "@/components/common/NavbarSection"
 import { Button } from "@/components/ui/button"
 import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { authClient } from "@/lib/auth/client"
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -24,27 +25,27 @@ export default function AdminLoginPage() {
 
     const form = event.currentTarget
     const formData = new FormData(form)
-    const email = String(formData.get("email") ?? "")
+    const email = String(formData.get("email") ?? "").trim().toLowerCase()
     const password = String(formData.get("password") ?? "")
 
     try {
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      })
-
-      if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as
-          | { error?: string }
-          | null
+      const { error } = await authClient.signIn.email({ email, password })
+      if (error) {
         setStatus("error")
-        setErrorMessage(data?.error ?? "Login failed.")
+        setErrorMessage("Invalid email or password.")
+        return
+      }
+
+      const access = await fetch("/api/admin/session", { cache: "no-store" })
+      if (!access.ok) {
+        await authClient.signOut()
+        setStatus("error")
+        setErrorMessage("This account is not authorized.")
         return
       }
 
       setStatus("success")
-      router.push("/admin/dashboard")
+      router.replace("/admin/dashboard")
       router.refresh()
     } catch {
       setStatus("error")

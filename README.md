@@ -7,7 +7,7 @@ Premium marketing website for **FZ Concept**, a Moroccan interior redesign agenc
 - **Next.js (App Router)** + **React**
 - **Tailwind CSS** (CSS variables) + **shadcn/ui**
 - **motion** (animations)
-- **Supabase** (contact submissions + admin login)
+- **Neon Postgres** (contact submissions + managed admin auth)
 
 ## Routes
 
@@ -28,9 +28,9 @@ Premium marketing website for **FZ Concept**, a Moroccan interior redesign agenc
 
 ## API Routes
 
-- `POST /api/contact` Save contact form submissions to Supabase
-- `POST /api/admin/login` Login via Supabase Auth and set an HTTP-only session cookie
-- `POST /api/admin/logout` Clear session cookie
+- `POST /api/contact` Save contact form submissions to Neon Postgres
+- `/api/auth/*` Neon Managed Auth handler
+- `GET /api/admin/session` Check admin access
 - `GET /api/admin/messages` Fetch latest contact submissions (requires admin session cookie)
 
 ## Getting Started
@@ -61,20 +61,15 @@ npm run lint
 
 ## Environment Variables
 
-Create a `.env` file at the project root (it’s ignored by Git via `.gitignore`).
+Use `.env.local` for local values (it’s ignored by Git via `.gitignore`).
 
 ```bash
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=
-
-# Recommended server-only keys
-SUPABASE_URL=
-SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+# Neon (neon deploy supplies DATABASE_URL and NEON_AUTH_BASE_URL)
+DATABASE_URL=
+NEON_AUTH_BASE_URL=
+NEON_AUTH_COOKIE_SECRET=
 
 # Admin auth (server-only)
-ADMIN_SESSION_SECRET=
 ADMIN_EMAIL_ALLOWLIST=
 
 # Optional hardening (comma-separated origins)
@@ -83,56 +78,41 @@ ALLOWED_ORIGINS=
 
 Notes:
 
-- `ADMIN_SESSION_SECRET` must be set for admin login to work.
-- `SUPABASE_SERVICE_ROLE_KEY` must be server-only and is used for admin reads.
-- Never expose or commit `SUPABASE_SERVICE_ROLE_KEY`. If it was ever pasted into chat or logged, rotate it in Supabase.
+- `NEON_AUTH_COOKIE_SECRET` must be at least 32 characters. Keep it server-only.
+- Set `ADMIN_EMAIL_ALLOWLIST` to the comma-separated admin addresses. An empty allowlist denies dashboard access.
+- Never commit database credentials or auth secrets.
 
-## Supabase Setup
+## Neon Setup
 
-### 1) Create the table
+Link this project to the Neon project and production branch, then configure Managed Auth:
 
-Run this in Supabase SQL editor:
-
-```sql
-create extension if not exists pgcrypto;
-
-create table if not exists public.contact_submissions (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamptz not null default now(),
-  name text not null,
-  email text not null,
-  phone text,
-  reason text,
-  location text,
-  message text not null,
-  website text,
-  ip_address text,
-  user_agent text,
-  page_url text,
-  status text default 'new'
-);
-
-alter table public.contact_submissions enable row level security;
+```bash
+neon link --project-id calm-shape-11505688 --branch production -y
+neon config init --services auth
+neon deploy
 ```
 
-### 2) RLS policy
+`neon deploy` pulls `DATABASE_URL` and `NEON_AUTH_BASE_URL` into `.env.local`. Add a random `NEON_AUTH_COOKIE_SECRET` of at least 32 characters there and set the same variable in the app host.
 
-This project saves contact form submissions through the Next API route. The recommended approach is:
+### Create the contact table
 
-- Use `SUPABASE_SERVICE_ROLE_KEY` server-side to insert/select (bypasses RLS), and keep RLS enabled for safety.
+Run the checked-in migration against the linked branch with `npm run db:migrate`. It uses Neon’s direct connection when `DATABASE_URL_UNPOOLED` is available and is safe to rerun.
 
-If you decide to insert with an anon key instead, you must create an `INSERT` policy for `anon`.
+This migration creates an empty Neon table. Existing Supabase contact submissions are not copied.
 
-### 3) Create an admin user
+### Admin account
 
-Create an admin user in Supabase Auth (Email/Password). Then allow it in one of two ways:
+Create the admin account in Neon Auth, then include its email in `ADMIN_EMAIL_ALLOWLIST`:
 
-- Set `ADMIN_EMAIL_ALLOWLIST` (recommended), e.g. `admin@fzconcept.com`
-- Or leave `ADMIN_EMAIL_ALLOWLIST` empty to allow any valid Supabase user to log in
+```bash
+neon neon-auth user create --email you@example.com --name "Your Name"
+```
+
+Supabase Auth password hashes and sessions do not transfer. Set a new Neon Auth password for each moved account.
 
 ## Admin Dashboard
 
-- Login at `/admin` with Supabase Auth credentials.
+- Login at `/admin` with Neon Auth credentials.
 - Dashboard loads messages from `/api/admin/messages` and displays the latest submissions.
 
 ## Deployment

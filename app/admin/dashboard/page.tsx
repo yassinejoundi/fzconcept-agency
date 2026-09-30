@@ -1,23 +1,17 @@
 import Link from "next/link"
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import { LayoutDashboard, Mail, LogOut } from "lucide-react"
+import { LayoutDashboard, Mail } from "lucide-react"
 
 import { NavbarSection } from "@/components/common/NavbarSection"
 import { MessagesSection } from "@/components/admin/MessagesSection"
+import { SignOutButton } from "@/components/admin/SignOutButton"
 import { Button } from "@/components/ui/button"
-import {
-  getAdminCookieName,
-  verifyAdminSessionCookieValue,
-} from "@/lib/adminSession"
+import { getAdminSession } from "@/lib/adminAuth"
+
+export const dynamic = "force-dynamic"
 
 export default async function AdminDashboardPage() {
-  const secret = process.env.ADMIN_SESSION_SECRET ?? ""
-  const sessionCookie = (await cookies()).get(getAdminCookieName())?.value ?? ""
-  const session =
-    secret && sessionCookie
-      ? verifyAdminSessionCookieValue(sessionCookie, secret)
-      : null
+  const session = await getAdminSession()
 
   if (!session) redirect("/admin")
 
@@ -41,16 +35,7 @@ export default async function AdminDashboardPage() {
                 </p>
               </div>
 
-              <form action="/api/admin/logout" method="post">
-                <Button
-                  type="submit"
-                  variant="outline"
-                  className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                >
-                  <LogOut className="mr-2 h-5 w-5" />
-                  Sign Out
-                </Button>
-              </form>
+              <SignOutButton />
             </div>
           </div>
         </section>
