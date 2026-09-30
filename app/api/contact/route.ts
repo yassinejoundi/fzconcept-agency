@@ -155,7 +155,7 @@ export async function POST(request: Request) {
     )
   }
 
-  if (phone.length > 50) {
+  if (!phone || phone.length > 50) {
     return NextResponse.json(
       { ok: false, error: "Please enter a valid phone number." },
       { status: 400 }

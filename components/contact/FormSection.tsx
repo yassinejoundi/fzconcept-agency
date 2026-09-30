@@ -18,7 +18,7 @@ export function FormSection() {
     text: "Quelques détails suffisent pour commencer la conversation. Nous vous recontacterons pour définir la suite ensemble.",
     name: "Nom complet",
     email: "Adresse email",
-    phone: "Téléphone (facultatif)",
+    phone: "Téléphone",
     reason: "Votre projet",
     reasonPlaceholder: "Sélectionnez un sujet",
     reasons: ["Aménagement intérieur", "Ameublement sur mesure", "Décoration", "Autre demande"],
@@ -38,7 +38,7 @@ export function FormSection() {
     text: "A few details are enough to start the conversation. We will get back to you to decide the next steps together.",
     name: "Full name",
     email: "Email address",
-    phone: "Phone (optional)",
+    phone: "Phone",
     reason: "Your project",
     reasonPlaceholder: "Select a subject",
     reasons: ["Interior furnishing", "Bespoke furniture", "Decoration", "Other inquiry"],
@@ -104,7 +104,7 @@ export function FormSection() {
             <div className="fz-field"><label htmlFor="fz-email">{copy.email}</label><input id="fz-email" name="email" type="email" autoComplete="email" maxLength={320} required /></div>
           </div>
           <div className="fz-field-row">
-            <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} /></div>
+            <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} required /></div>
             <div className="fz-field"><label htmlFor="fz-location">{copy.location}</label><input id="fz-location" name="location" type="text" autoComplete="address-level2" maxLength={120} /></div>
           </div>
           <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><div className="fz-select-wrap"><select id="fz-reason" name="reason" defaultValue="" required><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select><FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /></div></div>
