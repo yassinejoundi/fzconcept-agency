@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowUpRightFromSquare, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons"
 import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
@@ -8,7 +9,10 @@ import { useI18n } from "@/components/common/I18nProvider"
 
 export function Footer() {
   const { locale } = useI18n()
+  const pathname = usePathname()
   const fr = locale === "fr"
+
+  if (pathname.startsWith("/admin")) return null
 
   return (
     <footer className="fz-footer">

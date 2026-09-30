@@ -1,177 +1,280 @@
 "use client"
 
 import { FormEvent, useState } from "react"
-import { useRouter } from "next/navigation"
+import Image from "next/image"
 import Link from "next/link"
-import { Lock, ShieldCheck } from "lucide-react"
-import * as motion from "motion/react-client"
+import { useRouter } from "next/navigation"
 
-import { NavbarSection } from "@/components/common/NavbarSection"
-import { Button } from "@/components/ui/button"
-import { fadeInUp, staggerContainer } from "@/lib/animations"
+import { useI18n } from "@/components/common/I18nProvider"
 import { authClient } from "@/lib/auth/client"
 
 export default function AdminLoginPage() {
   const router = useRouter()
-  const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error"
-  >("idle")
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const { locale, setLocale } = useI18n()
+  const fr = locale === "fr"
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const text = fr
+    ? {
+        skip: "Aller à la connexion",
+        nav: "Navigation du studio",
+        language: "Langue",
+        website: "Voir le site",
+        studio: "FZ Concept · Marrakech",
+        imageCaption: "Un intérieur pensé autour de vous.",
+        eyebrow: "Espace studio",
+        title: "Bon retour",
+        intro: "Connectez-vous pour gérer les demandes du studio.",
+        email: "Adresse e-mail",
+        password: "Mot de passe",
+        emailPlaceholder: "vous@exemple.com",
+        submit: "Se connecter",
+        submitting: "Connexion en cours…",
+        invalid: "E-mail ou mot de passe incorrect. Vérifiez vos identifiants et réessayez.",
+        unauthorized:
+          "Ce compte n’est pas autorisé à ouvrir le tableau de bord. Contactez l’administrateur du studio.",
+        failed: "Connexion impossible. Vérifiez votre connexion et réessayez.",
+        access: "L’accès est réservé aux comptes autorisés du studio.",
+        privacy: "Confidentialité",
+        terms: "Conditions d’utilisation",
+      }
+    : {
+        skip: "Skip to sign in",
+        nav: "Studio navigation",
+        language: "Language",
+        website: "View website",
+        studio: "FZ Concept · Marrakech",
+        imageCaption: "A home shaped around its owner.",
+        eyebrow: "Studio access",
+        title: "Welcome back",
+        intro: "Sign in to manage studio enquiries.",
+        email: "Email address",
+        password: "Password",
+        emailPlaceholder: "you@example.com",
+        submit: "Sign in",
+        submitting: "Signing in…",
+        invalid: "Email or password is incorrect. Check both and try again.",
+        unauthorized:
+          "This account cannot open the admin dashboard. Contact the studio administrator.",
+        failed: "Unable to sign in. Check your connection and try again.",
+        access: "Access is limited to approved studio accounts.",
+        privacy: "Privacy",
+        terms: "Terms of service",
+      }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    setStatus("submitting")
-    setErrorMessage(null)
+    setIsSubmitting(true)
+    setErrorMessage("")
 
-    const form = event.currentTarget
-    const formData = new FormData(form)
+    const formData = new FormData(event.currentTarget)
     const email = String(formData.get("email") ?? "").trim().toLowerCase()
     const password = String(formData.get("password") ?? "")
 
     try {
       const { error } = await authClient.signIn.email({ email, password })
       if (error) {
-        setStatus("error")
-        setErrorMessage("Invalid email or password.")
+        setErrorMessage(text.invalid)
+        setIsSubmitting(false)
         return
       }
 
       const access = await fetch("/api/admin/session", { cache: "no-store" })
       if (!access.ok) {
         await authClient.signOut()
-        setStatus("error")
-        setErrorMessage("This account is not authorized.")
+        setErrorMessage(text.unauthorized)
+        setIsSubmitting(false)
         return
       }
 
-      setStatus("success")
       router.replace("/admin/dashboard")
       router.refresh()
     } catch {
-      setStatus("error")
-      setErrorMessage("Login failed.")
+      setErrorMessage(text.failed)
+      setIsSubmitting(false)
     }
   }
 
+  function changeLocale(next: "en" | "fr") {
+    if (next === locale) return
+    setLocale(next)
+    router.refresh()
+  }
+
   return (
-    <div>
-      <NavbarSection />
-      <main>
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-linear-to-b from-secondary/40 via-background to-background" />
-          <div className="absolute -top-32 -right-24 h-72 w-72 rounded-full bg-gold/10 blur-3xl" />
-          <div className="absolute -bottom-40 -left-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+    <div className="min-h-svh bg-[#f5f0e9] font-body text-[#251716]">
+      <a
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-[#3c1012] focus:px-4 focus:py-3 focus:text-[#f5f0e9] focus:outline-2 focus:outline-offset-2 focus:outline-[#251716]"
+        href="#admin-main"
+      >
+        {text.skip}
+      </a>
 
-          <div className="relative mx-auto w-full max-w-7xl px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
-            <motion.div
-              className="mx-auto grid max-w-5xl gap-10 md:grid-cols-2 md:items-center"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={staggerContainer}
+      <header className="flex min-h-[4.5rem] items-center justify-between gap-3 border-b border-[#d5c5b4] px-4 sm:px-8">
+        <Link
+          className="inline-flex min-h-11 items-baseline gap-2 text-[#3c1012] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+          href="/"
+          aria-label="FZ Concept — home"
+        >
+          <span className="font-headline text-3xl leading-none tracking-[-0.08em]">
+            FZ
+          </span>
+          <span className="hidden text-[0.62rem] font-bold tracking-[0.25em] min-[360px]:inline-block">
+            CONCEPT
+          </span>
+        </Link>
+
+        <nav className="flex items-center gap-2 sm:gap-5" aria-label={text.nav}>
+          <div
+            className="flex items-center"
+            role="group"
+            aria-label={text.language}
+          >
+            <button
+              className={`min-h-11 min-w-10 px-2 text-xs font-bold tracking-[0.1em] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012] ${!fr ? "text-[#3c1012] underline" : "text-[#675751] hover:text-[#3c1012]"}`}
+              type="button"
+              aria-pressed={!fr}
+              onClick={() => changeLocale("en")}
             >
-              <motion.div variants={fadeInUp}>
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-5 py-2.5 shadow-lg border border-gold/30">
-                  <div className="h-2 w-2 rounded-full bg-gold" />
-                  <span className="text-sm font-medium text-primary tracking-wide uppercase">
-                    Admin Access
-                  </span>
-                </div>
+              EN
+            </button>
+            <span aria-hidden="true" className="text-[#a6814d]">
+              /
+            </span>
+            <button
+              className={`min-h-11 min-w-10 px-2 text-xs font-bold tracking-[0.1em] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012] ${fr ? "text-[#3c1012] underline" : "text-[#675751] hover:text-[#3c1012]"}`}
+              type="button"
+              aria-pressed={fr}
+              onClick={() => changeLocale("fr")}
+            >
+              FR
+            </button>
+          </div>
+          <span aria-hidden="true" className="h-5 w-px bg-[#d5c5b4]" />
+          <Link
+            className="inline-flex min-h-11 items-center px-1 text-sm font-semibold text-[#3c1012] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+            href="/"
+          >
+            {text.website}
+          </Link>
+        </nav>
+      </header>
 
-                <h1 className="mt-6 font-serif text-5xl font-bold leading-tight text-foreground md:text-6xl">
-                  Secure Dashboard Login
-                </h1>
-                <p className="mt-4 font-sans text-muted-foreground md:text-lg">
-                  Sign in to manage inquiries and keep the experience premium
-                  and private.
-                </p>
+      <main
+        className="mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-[1440px] grid-flow-dense lg:grid-cols-2"
+        id="admin-main"
+      >
+        <figure className="grid min-h-[20rem] grid-rows-[1fr_auto] overflow-hidden bg-[#3c1012] lg:min-h-[calc(100svh-4.5rem)]">
+          <div className="relative min-h-[14rem] overflow-hidden bg-[#e4cfb4] sm:min-h-[18rem] lg:min-h-0">
+            <Image
+              alt=""
+              className="object-cover object-[center_56%]"
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              src="/images/soft-living.webp"
+            />
+          </div>
+          <figcaption className="border-t border-white/15 bg-[#3c1012] px-6 py-5 text-[#f5f0e9] sm:px-8 sm:py-6">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#e4cfb4]">
+              {text.studio}
+            </p>
+            <p className="mt-2 max-w-xl font-headline text-xl leading-tight text-balance sm:text-2xl">
+              {text.imageCaption}
+            </p>
+          </figcaption>
+        </figure>
 
-                <div className="mt-8 grid gap-4">
-                  <div className="flex items-start gap-3 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
-                    <ShieldCheck className="mt-0.5 h-5 w-5 text-gold" />
-                    <div>
-                      <p className="font-serif font-semibold text-foreground">
-                        Protected Access
-                      </p>
-                      <p className="font-sans text-sm text-muted-foreground">
-                        Only approved accounts can access the dashboard.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
-                    <Lock className="mt-0.5 h-5 w-5 text-gold" />
-                    <div>
-                      <p className="font-serif font-semibold text-foreground">
-                        Encrypted Session
-                      </p>
-                      <p className="font-sans text-sm text-muted-foreground">
-                        Login creates a server-set, HTTP-only session cookie.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+        <section className="flex items-center justify-center px-5 py-12 sm:px-10 sm:py-16 lg:px-12 xl:px-20">
+          <div className="w-full max-w-md">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#765b36]">
+              {text.eyebrow}
+            </p>
+            <h1 className="mt-4 max-w-5xl font-headline text-[clamp(2.6rem,5vw,4rem)] leading-[1.08] tracking-[-0.045em] text-[#3c1012] text-balance">
+              {text.title}
+            </h1>
+            <p className="mt-4 max-w-[36ch] text-base leading-relaxed text-[#554942] text-pretty">
+              {text.intro}
+            </p>
 
-              <motion.div
-                className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10"
-                variants={fadeInUp}
+            <form className="mt-9 grid gap-5" onSubmit={handleSubmit}>
+              <div className="grid gap-2">
+                <label
+                  className="text-sm font-semibold text-[#251716]"
+                  htmlFor="admin-email"
+                >
+                  {text.email}
+                </label>
+                <input
+                  autoComplete="username"
+                  className="min-h-12 w-full border border-[#bca999] bg-[#fbf8f3] px-4 text-base text-[#251716] placeholder:text-[#71645c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+                  id="admin-email"
+                  name="email"
+                  placeholder={text.emailPlaceholder}
+                  required
+                  type="email"
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <label
+                  className="text-sm font-semibold text-[#251716]"
+                  htmlFor="admin-password"
+                >
+                  {text.password}
+                </label>
+                <input
+                  autoComplete="current-password"
+                  className="min-h-12 w-full border border-[#bca999] bg-[#fbf8f3] px-4 text-base text-[#251716] placeholder:text-[#71645c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+                  id="admin-password"
+                  name="password"
+                  required
+                  type="password"
+                />
+              </div>
+
+              <button
+                className="mt-1 min-h-12 w-full bg-[#3c1012] px-5 text-sm font-bold text-[#f5f0e9] transition-colors duration-150 hover:bg-[#251716] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012] disabled:cursor-wait disabled:opacity-70 motion-reduce:transition-none"
+                disabled={isSubmitting}
+                type="submit"
               >
-                <form onSubmit={handleSubmit} className="grid gap-6">
-                  <div>
-                    <label className="text-sm font-medium font-sans text-foreground">
-                      Email
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                      placeholder="you@domain.com"
-                    />
-                  </div>
+                {isSubmitting ? text.submitting : text.submit}
+              </button>
+            </form>
 
-                  <div>
-                    <label className="text-sm font-medium font-sans text-foreground">
-                      Password
-                    </label>
-                    <input
-                      name="password"
-                      type="password"
-                      required
-                      minLength={8}
-                      className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                      placeholder="••••••••"
-                    />
-                  </div>
+            <p
+              aria-live="polite"
+              aria-atomic="true"
+              className="mt-4 min-h-6 text-sm leading-relaxed text-[#7d2023]"
+              role="status"
+            >
+              {errorMessage}
+            </p>
 
-                  <div className="grid gap-3">
-                    <Button
-                      className="h-12 rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
-                      disabled={status === "submitting"}
-                    >
-                      {status === "submitting" ? "Signing in..." : "Sign In"}
-                    </Button>
-
-                    {status === "error" ? (
-                      <p className="text-center text-sm font-sans text-destructive">
-                        {errorMessage ?? "Login failed."}
-                      </p>
-                    ) : null}
-
-                    <p className="text-center text-sm font-sans text-muted-foreground">
-                      Return to{" "}
-                      <Link href="/" className="text-gold hover:underline">
-                        Home
-                      </Link>
-                    </p>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
+            <p className="mt-3 border-t border-[#d5c5b4] pt-4 text-sm leading-relaxed text-[#554942]">
+              {text.access}
+            </p>
           </div>
         </section>
       </main>
+
+      <footer className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-[#d5c5b4] px-5 py-4 text-xs text-[#554942] sm:px-8">
+        <span>© {new Date().getFullYear()} FZ Concept</span>
+        <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label={fr ? "Liens juridiques" : "Legal links"}>
+          <Link
+            className="underline decoration-transparent underline-offset-4 hover:text-[#3c1012] hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+            href="/privacy-policy"
+          >
+            {text.privacy}
+          </Link>
+          <Link
+            className="underline decoration-transparent underline-offset-4 hover:text-[#3c1012] hover:decoration-current focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+            href="/terms-of-service"
+          >
+            {text.terms}
+          </Link>
+        </nav>
+      </footer>
     </div>
   )
 }
-
