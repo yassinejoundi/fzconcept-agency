@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -20,6 +20,15 @@ export function NavbarSection() {
     { href: "/contact", label: "Contact" },
   ]
 
+  useEffect(() => {
+    if (!open) return
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false)
+    }
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [open])
+
   function changeLocale(next: "en" | "fr") {
     if (next === locale) return
     setLocale(next)
@@ -28,6 +37,7 @@ export function NavbarSection() {
 
   return (
     <header className="fz-header">
+      <a className="fz-skip-link" href="#main-content">{fr ? "Aller au contenu" : "Skip to content"}</a>
       <nav className="fz-nav fz-shell" aria-label={fr ? "Navigation principale" : "Main navigation"}>
         <Link className="fz-wordmark" href="/" onClick={() => setOpen(false)} aria-label="FZ Concept — home">
           <span className="fz-wordmark-mark">FZ</span>

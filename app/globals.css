@@ -317,7 +317,10 @@
 .fz-site a, .fz-footer a, .fz-site button, .fz-header button { cursor: pointer; }
 .fz-site :focus-visible, .fz-header :focus-visible, .fz-footer :focus-visible { outline: 2px solid var(--fz-brass); outline-offset: 5px; }
 
-.fz-header { position: relative; z-index: 50; background: var(--fz-paper); border-bottom: 1px solid #d9cbc0; color: var(--fz-ink); }
+.fz-header { position: sticky; top: 0; z-index: 50; background: var(--fz-paper); border-bottom: 1px solid #d9cbc0; color: var(--fz-ink); }
+.fz-skip-link { position: absolute; top: -60px; left: 16px; z-index: 60; padding: 10px 15px; background: var(--fz-wine); color: var(--fz-paper); font-size: .82rem; }
+.fz-skip-link:focus { top: 10px; }
+#main-content, #contact-form, #studio { scroll-margin-top: 96px; }
 .fz-nav { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 26px; }
 .fz-wordmark { display: inline-flex; align-items: baseline; gap: 10px; color: var(--fz-wine); white-space: nowrap; line-height: 1; }
 .fz-wordmark-mark { font-size: 2.25rem; letter-spacing: -.08em; }
