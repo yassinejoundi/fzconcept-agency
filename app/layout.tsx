@@ -1,18 +1,11 @@
 import type { Metadata } from "next"
-import { Fraunces, Merriweather_Sans } from "next/font/google"
+import "@fontsource/fraunces/600.css"
+import "@fontsource/fraunces/700.css"
+import "@fontsource/merriweather-sans/400.css"
+import "@fontsource/merriweather-sans/500.css"
+import "@fontsource/merriweather-sans/600.css"
+import "@fontsource/merriweather-sans/700.css"
 import "./globals.css"
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["600", "700"], // semibold and bold
-})
-
-const merriweatherSans = Merriweather_Sans({
-  variable: "--font-merriweather-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // regular, medium, semibold, and bold
-})
 
 import { Footer } from "@/components/common/Footer"
 import { I18nProvider } from "@/components/common/I18nProvider"
@@ -41,9 +34,7 @@ export default async function RootLayout({
   const locale = await getRequestLocale()
   return (
     <html lang={locale}>
-      <body
-        className={`${fraunces.variable} ${merriweatherSans.variable} antialiased`}
-      >
+      <body className="antialiased">
         <I18nProvider initialLocale={locale}>
           {children}
           <Footer />
