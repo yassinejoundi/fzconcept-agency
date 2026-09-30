@@ -18,7 +18,7 @@ FZ Concept is a Marrakech studio for custom furnishing and interior decoration. 
 
 Use Fraunces for expressive editorial headlines and Satoshi for navigation, body, and controls. Keep line lengths comfortable and body copy at least 16px. Gold is a small detail, not body text on pale backgrounds. Large imagery, tight typography, precise rules, and generous chapter spacing carry the premium feel. Avoid gradients on type, heavy shadows, pill overload, arbitrary badges, and empty prestige claims.
 
-## Homepage journey
+## Site journey
 
 1. **Attention:** split editorial hero; short Marrakech-specific promise and two clear paths: discuss a project, see work.
 2. **Interest:** short studio philosophy plus an exact three-card grid showing apartments, villas, and detail work.
@@ -26,6 +26,14 @@ Use Fraunces for expressive editorial headlines and Satoshi for navigation, body
 4. **Action:** strong closing invitation to request a personalized study, followed by useful contact routes and legal links.
 
 Use the six photographs in `.project/images` as local source material. Publish optimized copies under `public/images`. Treat the brochure's imagery and copy as the authority; avoid unrelated remote stock. Show founder portrait only with an accurate name/caption.
+
+The portfolio uses the labelled project photographs embedded in `.project/FZ flare.pdf`. Keep those captions factual: villa living room and suite, apartment bedroom and dining room, riad guest room, custom TV furniture, welcome area, and materials. Other pages may use the supplied `.project/images` as atmosphere without presenting them as completed client projects.
+
+- **About:** studio point of view, the three brochure commitments (elegance, personalization, function), and its six-stage method.
+- **Services:** six brochure services, their practical outputs, and a direct path to discuss a project.
+- **Portfolio:** visual work first, exact brochure captions, and a closing project invitation. No made-up client names or metrics.
+- **Contact:** concise invitation, verified contact routes, and the existing submission form and privacy agreement. Do not promise hours or reply times absent from the brochure.
+- **Links and legal:** calm typography, readable line lengths, and the same navigation and footer. Preserve legal substance while fixing obsolete contact details.
 
 ## Interaction and responsive rules
 
@@ -37,4 +45,4 @@ Use the six photographs in `.project/images` as local source material. Publish o
 
 ## Scope
 
-The current redesign owns the homepage, shared navbar, and shared footer. Other routes keep working. New homepage elements use semantic HTML and CSS, never shadcn components. Reuse existing Next.js routing and locale context; add dependencies only for required Font Awesome and GSAP behavior.
+The editorial system covers all public routes and the shared navbar and footer. Admin routes remain separate. New public elements use semantic HTML and CSS, never shadcn components. Reuse existing Next.js routing, locale context, and contact API; add dependencies only for required Font Awesome and GSAP behavior.
