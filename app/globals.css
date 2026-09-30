@@ -306,6 +306,10 @@
 }
 
 ::selection { background: var(--fz-wine); color: var(--fz-paper); }
+html { scrollbar-color: var(--fz-wine) var(--fz-paper); }
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: var(--fz-paper); }
+::-webkit-scrollbar-thumb { border: 3px solid var(--fz-paper); border-radius: 999px; background: var(--fz-wine); }
 
 .fz-site, .fz-footer { font-family: "Satoshi", var(--font-merriweather-sans), sans-serif; }
 .fz-site { color: var(--fz-ink); background: var(--fz-paper); }
