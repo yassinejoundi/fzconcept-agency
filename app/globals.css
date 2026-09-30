@@ -691,6 +691,11 @@
 .fz-field { display: flex; flex-direction: column; gap: 9px; }
 .fz-field label { color: var(--fz-wine); font-size: .83rem; font-weight: 700; }
 .fz-field input, .fz-field select, .fz-field textarea { width: 100%; min-height: 52px; border: 1px solid #bca999; border-radius: 0; padding: 12px 15px; background: var(--fz-paper); color: var(--fz-ink); font-family: "Satoshi", sans-serif; font-size: 1rem; line-height: 1.4; }
+.fz-select-wrap { position: relative; }
+.fz-select-wrap select { appearance: none; padding-right: 48px; }
+.fz-select-wrap > svg { position: absolute; top: 50%; right: 18px; width: .8rem; color: var(--fz-wine); pointer-events: none; transform: translateY(-50%); transition: transform .2s ease; }
+.fz-select-wrap:focus-within > svg { transform: translateY(-50%) rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .fz-select-wrap > svg { transition: none; } }
 .fz-field textarea { resize: vertical; }
 .fz-field input:focus-visible, .fz-field select:focus-visible, .fz-field textarea:focus-visible { outline: 2px solid var(--fz-wine); outline-offset: 2px; }
 .fz-field textarea::placeholder { color: #71645c; }

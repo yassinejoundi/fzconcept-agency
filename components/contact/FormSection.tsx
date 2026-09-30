@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react"
 import Link from "next/link"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faArrowUpRightFromSquare, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { faArrowUpRightFromSquare, faChevronDown, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons"
 import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import { useI18n } from "@/components/common/I18nProvider"
 
@@ -107,7 +107,7 @@ export function FormSection() {
             <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} /></div>
             <div className="fz-field"><label htmlFor="fz-location">{copy.location}</label><input id="fz-location" name="location" type="text" autoComplete="address-level2" maxLength={120} /></div>
           </div>
-          <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><select id="fz-reason" name="reason" defaultValue="" required><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select></div>
+          <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><div className="fz-select-wrap"><select id="fz-reason" name="reason" defaultValue="" required><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select><FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /></div></div>
           <div className="fz-field"><label htmlFor="fz-message">{copy.message}</label><textarea id="fz-message" name="message" rows={6} minLength={10} maxLength={5000} placeholder={copy.messageHint} required /></div>
           <div className="fz-consent"><input id="fz-privacy" type="checkbox" required /><label htmlFor="fz-privacy">{fr ? "J’accepte la " : "I agree to the "}<Link href="/privacy-policy">{copy.privacy}</Link>.</label></div>
           <button className="fz-button fz-button-dark" type="submit" disabled={status === "submitting"}>{status === "submitting" ? copy.sending : copy.send}<FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></button>
