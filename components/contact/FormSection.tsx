@@ -1,340 +1,118 @@
 "use client"
 
-import { useState, FormEvent } from "react"
-import { Mail, MapPin, Phone } from "lucide-react"
-import * as motion from "motion/react-client"
-import { scaleIn, slideInLeft } from "@/lib/animations"
-
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { FormEvent, useState } from "react"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowUpRightFromSquare, faEnvelope, faLocationDot, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import { useI18n } from "@/components/common/I18nProvider"
 
 export function FormSection() {
-  const [status, setStatus] = useState<
-    "idle" | "submitting" | "success" | "error"
-  >("idle")
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const { locale } = useI18n()
-
-  const copy =
-    locale === "fr"
-      ? {
-          eyebrow: "Contact",
-          title: "Parlons de votre espace",
-          description:
-            "Partagez vos objectifs, votre calendrier et vos préférences. Nous répondrons avec des prochaines étapes claires et une consultation adaptée.",
-          locationTitle: "Marrakech, Maroc",
-          locationSubtitle: "Disponible partout au Maroc",
-          hours: "Lun–Sam, 9:00–18:00",
-          replyTime: "Réponse sous 24–48h",
-          fullName: "Nom complet",
-          fullNamePlaceholder: "Votre nom",
-          phoneOptional: "Téléphone (optionnel)",
-          email: "Email",
-          reason: "Motif de contact",
-          reasonPlaceholder: "Choisir un motif",
-          reasons: {
-            quote: "Demander un devis",
-            newProject: "Nouveau projet",
-            renovation: "Rénovation",
-            consultation: "Consultation",
-            partnership: "Partenariat",
-            press: "Presse",
-            other: "Autre",
-          },
-          projectLocation: "Lieu du projet",
-          projectLocationPlaceholder: "Marrakech, Casablanca…",
-          message: "Message",
-          messagePlaceholder:
-            "Décrivez votre espace, votre calendrier et vos objectifs.",
-          privacy: "J’accepte la Politique de confidentialité.",
-          sending: "Envoi…",
-          send: "Envoyer",
-          success: "Merci — votre message a bien été reçu. Réponse sous peu.",
-          error: "Une erreur est survenue. Veuillez réessayer.",
-        }
-      : {
-          eyebrow: "Contact",
-          title: "Let’s Talk About Your Space",
-          description:
-            "Share your goals, timeline, and style preferences. We’ll respond with clear next steps and a tailored consultation.",
-          locationTitle: "Marrakech, Morocco",
-          locationSubtitle: "Available across Morocco",
-          hours: "Mon–Sat, 9:00–18:00",
-          replyTime: "We reply within 24–48 hours",
-          fullName: "Full name",
-          fullNamePlaceholder: "Your name",
-          phoneOptional: "Phone (optional)",
-          email: "Email",
-          reason: "Reason for contact",
-          reasonPlaceholder: "Select a reason",
-          reasons: {
-            quote: "Request a Quote",
-            newProject: "New Project",
-            renovation: "Renovation",
-            consultation: "Consultation",
-            partnership: "Partnership",
-            press: "Press",
-            other: "Other",
-          },
-          projectLocation: "Project location",
-          projectLocationPlaceholder: "Marrakech, Casablanca...",
-          message: "Message",
-          messagePlaceholder:
-            "Tell us about your space, timeline, and what you’d love to achieve.",
-          privacy: "I agree to the Privacy Policy.",
-          sending: "Sending...",
-          send: "Send Message",
-          success: "Thanks — we received your message and will reply shortly.",
-          error: "Something went wrong. Please try again.",
-        }
+  const fr = locale === "fr"
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [error, setError] = useState("")
+  const copy = fr ? {
+    eyebrow: "Votre projet commence ici",
+    title: "Racontez-nous votre espace.",
+    text: "Quelques détails suffisent pour commencer la conversation. Nous vous recontacterons pour définir la suite ensemble.",
+    name: "Nom complet",
+    email: "Adresse email",
+    phone: "Téléphone (facultatif)",
+    reason: "Votre projet",
+    reasonPlaceholder: "Sélectionnez un sujet",
+    reasons: ["Aménagement intérieur", "Ameublement sur mesure", "Décoration", "Autre demande"],
+    location: "Lieu du projet (facultatif)",
+    message: "Parlez-nous de votre projet",
+    messageHint: "Votre espace, vos envies et les délais envisagés",
+    privacy: "politique de confidentialité",
+    send: "Envoyer mon message",
+    sending: "Envoi en cours…",
+    success: "Votre message a bien été envoyé. Merci de nous avoir écrit.",
+    failure: "Impossible d’envoyer le message. Vérifiez votre connexion et réessayez.",
+    tooMany: "Trop de tentatives. Réessayez dans quelques minutes.",
+    elsewhere: "Ou contactez-nous directement",
+  } : {
+    eyebrow: "Your project starts here",
+    title: "Tell us about your space.",
+    text: "A few details are enough to start the conversation. We will get back to you to decide the next steps together.",
+    name: "Full name",
+    email: "Email address",
+    phone: "Phone (optional)",
+    reason: "Your project",
+    reasonPlaceholder: "Select a subject",
+    reasons: ["Interior furnishing", "Bespoke furniture", "Decoration", "Other inquiry"],
+    location: "Project location (optional)",
+    message: "Tell us about your project",
+    messageHint: "Your space, ideas, and expected timeline",
+    privacy: "privacy policy",
+    send: "Send my message",
+    sending: "Sending…",
+    success: "Your message has been sent. Thank you for writing to us.",
+    failure: "Unable to send your message. Check your connection and try again.",
+    tooMany: "Too many attempts. Please try again in a few minutes.",
+    elsewhere: "Or reach us directly",
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
-    setStatus("submitting")
-    setErrorMessage(null)
-
     const form = event.currentTarget
-    const formData = new FormData(form)
-
-    const payload = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      phone: formData.get("phone"),
-      reason: formData.get("reason"),
-      location: formData.get("location"),
-      message: formData.get("message"),
-      website: formData.get("website"),
-    }
+    const data = new FormData(form)
+    setStatus("submitting")
+    setError("")
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(Object.fromEntries(["name", "email", "phone", "reason", "location", "message", "website"].map((key) => [key, data.get(key) ?? ""]))),
       })
-
       if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as {
-          error?: string
-        } | null
         setStatus("error")
-        setErrorMessage(data?.error ?? copy.error)
+        setError(response.status === 429 ? copy.tooMany : copy.failure)
         return
       }
-
-      setStatus("success")
       form.reset()
+      setStatus("success")
     } catch {
       setStatus("error")
-      setErrorMessage(copy.error)
+      setError(copy.failure)
     }
   }
 
   return (
-    <section className="bg-secondary/20" id="contact-form">
-      <div className="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-20">
-        <div className="grid gap-10 md:grid-cols-2 md:items-start">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={slideInLeft}
-          >
-            <div className="mb-4 flex items-center">
-              <div className="mr-4 w-10 border-t border-gold" />
-              <p className="text-sm font-medium font-sans text-gold uppercase tracking-wider">
-                {copy.eyebrow}
-              </p>
-            </div>
-            <h2 className="text-4xl font-bold font-serif text-primary md:text-5xl">
-              {copy.title}
-            </h2>
-            <p className="mt-4 max-w-xl font-sans text-muted-foreground">
-              {copy.description}
-            </p>
-
-            <div className="mt-10 grid gap-4">
-              <div className="flex items-start gap-3 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
-                <MapPin className="mt-0.5 h-5 w-5 text-gold" />
-                <div>
-                  <p className="font-serif font-semibold text-foreground">
-                    {copy.locationTitle}
-                  </p>
-                  <p className="font-sans text-sm text-muted-foreground">
-                    {copy.locationSubtitle}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
-                <Phone className="mt-0.5 h-5 w-5 text-gold" />
-                <div>
-                  <p className="font-serif font-semibold text-foreground">
-                    +212 7 77 77 99 09
-                  </p>
-                  <p className="font-sans text-sm text-muted-foreground">
-                    {copy.hours}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 rounded-xl border border-border bg-card px-5 py-4 shadow-sm">
-                <Mail className="mt-0.5 h-5 w-5 text-gold" />
-                <div>
-                  <p className="font-serif font-semibold text-foreground">
-                    contact@fzconcept.com
-                  </p>
-                  <p className="font-sans text-sm text-muted-foreground">
-                    {copy.replyTime}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={scaleIn}
-          >
-            <form onSubmit={handleSubmit} className="grid gap-6">
-              <input
-                name="website"
-                type="text"
-                tabIndex={-1}
-                autoComplete="off"
-                className="hidden"
-              />
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-sm font-medium font-sans text-foreground">
-                    {copy.fullName}
-                  </label>
-                  <input
-                    name="name"
-                    type="text"
-                    required
-                    className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    placeholder={copy.fullNamePlaceholder}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium font-sans text-foreground">
-                    {copy.phoneOptional}
-                  </label>
-                  <input
-                    name="phone"
-                    type="tel"
-                    className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    placeholder="+212 ..."
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium font-sans text-foreground">
-                  {copy.email}
-                </label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  placeholder="you@domain.com"
-                />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="text-sm font-medium font-sans text-foreground">
-                    {copy.reason}
-                  </label>
-                  <select
-                    name="reason"
-                    required
-                    defaultValue=""
-                    className="mt-2 w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  >
-                    <option value="" disabled>
-                      {copy.reasonPlaceholder}
-                    </option>
-                    <option value="quote">{copy.reasons.quote}</option>
-                    <option value="new-project">
-                      {copy.reasons.newProject}
-                    </option>
-                    <option value="renovation">
-                      {copy.reasons.renovation}
-                    </option>
-                    <option value="consultation">
-                      {copy.reasons.consultation}
-                    </option>
-                    <option value="partnership">
-                      {copy.reasons.partnership}
-                    </option>
-                    <option value="press">{copy.reasons.press}</option>
-                    <option value="other">{copy.reasons.other}</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium font-sans text-foreground">
-                    {copy.projectLocation}
-                  </label>
-                  <input
-                    name="location"
-                    type="text"
-                    className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    placeholder={copy.projectLocationPlaceholder}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium font-sans text-foreground">
-                  {copy.message}
-                </label>
-                <textarea
-                  name="message"
-                  required
-                  rows={6}
-                  className="mt-2 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  placeholder={copy.messagePlaceholder}
-                />
-              </div>
-
-              <label className="flex items-start gap-3">
-                <Checkbox
-                  id="privacy-policy"
-                  required
-                  className="mt-1 h-4 w-4 rounded border-border text-primary"
-                />
-                <span className="text-sm font-sans text-muted-foreground">
-                  {copy.privacy}
-                </span>
-              </label>
-
-              <div className="grid gap-3">
-                <Button
-                  className="h-12 rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
-                  disabled={status === "submitting"}
-                >
-                  {status === "submitting" ? copy.sending : copy.send}
-                </Button>
-                {status === "success" ? (
-                  <p className="text-center text-sm font-sans text-muted-foreground">
-                    {copy.success}
-                  </p>
-                ) : status === "error" ? (
-                  <p className="text-center text-sm font-sans text-destructive">
-                    {errorMessage ?? copy.error}
-                  </p>
-                ) : null}
-              </div>
-            </form>
-          </motion.div>
+    <section className="fz-section fz-contact-section" id="contact-form">
+      <div className="fz-shell fz-contact-grid">
+        <div className="fz-contact-info">
+          <p className="fz-kicker">{copy.eyebrow}</p>
+          <h2>{copy.title}</h2>
+          <p>{copy.text}</p>
+          <div className="fz-contact-direct">
+            <h3>{copy.elsewhere}</h3>
+            <a href="tel:+212777779909"><FontAwesomeIcon icon={faPhone} aria-hidden="true" /> +212 7 77 77 99 09</a>
+            <a href="mailto:contact@fzconcept.agency"><FontAwesomeIcon icon={faEnvelope} aria-hidden="true" /> contact@fzconcept.agency</a>
+            <a href="https://wa.me/212777779909" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faWhatsapp} aria-hidden="true" /> WhatsApp <FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></a>
+            <a href="https://www.instagram.com/f.zconcept" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} aria-hidden="true" /> @f.zconcept <FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></a>
+            <span><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" /> Marrakech, Maroc</span>
+          </div>
         </div>
+
+        <form className="fz-contact-form" onSubmit={handleSubmit}>
+          <div className="fz-honeypot" aria-hidden="true"><label htmlFor="fz-website">Website</label><input id="fz-website" name="website" type="text" tabIndex={-1} autoComplete="off" /></div>
+          <div className="fz-field-row">
+            <div className="fz-field"><label htmlFor="fz-name">{copy.name}</label><input id="fz-name" name="name" type="text" autoComplete="name" minLength={2} maxLength={200} required /></div>
+            <div className="fz-field"><label htmlFor="fz-email">{copy.email}</label><input id="fz-email" name="email" type="email" autoComplete="email" maxLength={320} required /></div>
+          </div>
+          <div className="fz-field-row">
+            <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} /></div>
+            <div className="fz-field"><label htmlFor="fz-location">{copy.location}</label><input id="fz-location" name="location" type="text" autoComplete="address-level2" maxLength={120} /></div>
+          </div>
+          <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><select id="fz-reason" name="reason" defaultValue="" required><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select></div>
+          <div className="fz-field"><label htmlFor="fz-message">{copy.message}</label><textarea id="fz-message" name="message" rows={6} minLength={10} maxLength={5000} placeholder={copy.messageHint} required /></div>
+          <div className="fz-consent"><input id="fz-privacy" type="checkbox" required /><label htmlFor="fz-privacy">{fr ? "J’accepte la " : "I agree to the "}<Link href="/privacy-policy">{copy.privacy}</Link>.</label></div>
+          <button className="fz-button fz-button-dark" type="submit" disabled={status === "submitting"}>{status === "submitting" ? copy.sending : copy.send}<FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></button>
+          <p className="fz-form-feedback" role={status === "error" ? "alert" : "status"}>{status === "success" ? copy.success : status === "error" ? error : ""}</p>
+        </form>
       </div>
     </section>
   )

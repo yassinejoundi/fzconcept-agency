@@ -1,35 +1,38 @@
 import type { Metadata } from "next"
-
 import { NavbarSection } from "@/components/common/NavbarSection"
-import { HeroSection } from "@/components/contact/HeroSection"
+import { EditorialHero } from "@/components/common/EditorialPage"
+import { PageMotion } from "@/components/common/PageMotion"
 import { FormSection } from "@/components/contact/FormSection"
 import { getRequestLocale } from "@/lib/locale.server"
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getRequestLocale()
-  return locale === "fr"
-    ? {
-        title: "Contact | FZ Concept",
-        description:
-          "Contactez FZ Concept pour le design d’intérieur, la rénovation et le styling haut de gamme au Maroc.",
-      }
-    : {
-        title: "Contact | FZ Concept",
-        description:
-          "Contact FZ Concept for interior design, renovation, and luxury styling in Morocco.",
-      }
+  const fr = (await getRequestLocale()) === "fr"
+  return {
+    title: "Contact | FZ Concept",
+    description: fr
+      ? "Parlez de votre projet d’aménagement ou de décoration sur mesure avec FZ Concept à Marrakech."
+      : "Discuss your furnishing or interior decoration project with FZ Concept in Marrakech.",
+  }
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const fr = (await getRequestLocale()) === "fr"
   return (
-    <div>
+    <div className="fz-site fz-inner-page">
       <NavbarSection />
-      <main>
-        <HeroSection />
-        <div id="contact-form">
-          <FormSection />
-        </div>
+      <main id="main-content">
+        <EditorialHero
+          eyebrow={fr ? "Contact · Marrakech" : "Contact · Marrakech"}
+          title={fr ? "Parlons de votre prochain lieu." : "Let’s talk about your next space."}
+          description={fr ? "Une idée, une pièce ou un projet complet ? Dites-nous ce que vous imaginez. Nous prendrons le temps de comprendre votre espace." : "An idea, one room, or a complete project? Tell us what you have in mind. We will take the time to understand your space."}
+          image="/images/terracotta-lounge.webp"
+          alt={fr ? "Salon aux fauteuils terracotta et aux matières chaleureuses" : "Lounge with terracotta seating and warm materials"}
+          action={fr ? "Écrire au studio" : "Write to the studio"}
+          actionHref="#contact-form"
+        />
+        <FormSection />
       </main>
+      <PageMotion />
     </div>
   )
 }
