@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { Eye, EyeOff } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import { useI18n } from "@/components/common/I18nProvider"
@@ -13,6 +14,7 @@ export default function AdminLoginPage() {
   const { locale, setLocale } = useI18n()
   const fr = locale === "fr"
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
   const text = fr
     ? {
@@ -27,6 +29,8 @@ export default function AdminLoginPage() {
         intro: "Connectez-vous pour gérer les demandes du studio.",
         email: "Adresse e-mail",
         password: "Mot de passe",
+        showPassword: "Afficher le mot de passe",
+        hidePassword: "Masquer le mot de passe",
         emailPlaceholder: "vous@exemple.com",
         submit: "Se connecter",
         submitting: "Connexion en cours…",
@@ -50,6 +54,8 @@ export default function AdminLoginPage() {
         intro: "Sign in to manage studio enquiries.",
         email: "Email address",
         password: "Password",
+        showPassword: "Show password",
+        hidePassword: "Hide password",
         emailPlaceholder: "you@example.com",
         submit: "Sign in",
         submitting: "Signing in…",
@@ -223,14 +229,32 @@ export default function AdminLoginPage() {
                 >
                   {text.password}
                 </label>
-                <input
-                  autoComplete="current-password"
-                  className="min-h-12 w-full border border-[#bca999] bg-[#fbf8f3] px-4 text-base text-[#251716] placeholder:text-[#71645c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
-                  id="admin-password"
-                  name="password"
-                  required
-                  type="password"
-                />
+                <div className="relative">
+                  <input
+                    autoComplete="current-password"
+                    className="min-h-12 w-full border border-[#bca999] bg-[#fbf8f3] px-4 pe-14 text-base text-[#251716] placeholder:text-[#71645c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+                    id="admin-password"
+                    name="password"
+                    required
+                    type={isPasswordVisible ? "text" : "password"}
+                  />
+                  <button
+                    aria-controls="admin-password"
+                    aria-label={
+                      isPasswordVisible ? text.hidePassword : text.showPassword
+                    }
+                    aria-pressed={isPasswordVisible}
+                    className="absolute inset-y-0 end-1 inline-flex min-h-11 min-w-11 items-center justify-center self-center text-[#554942] hover:text-[#3c1012] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
+                    onClick={() => setIsPasswordVisible((visible) => !visible)}
+                    type="button"
+                  >
+                    {isPasswordVisible ? (
+                      <EyeOff aria-hidden="true" className="size-5" />
+                    ) : (
+                      <Eye aria-hidden="true" className="size-5" />
+                    )}
+                  </button>
+                </div>
               </div>
 
               <button
