@@ -305,6 +305,8 @@
   --fz-brass: #a6814d;
 }
 
+::selection { background: var(--fz-wine); color: var(--fz-paper); }
+
 .fz-site, .fz-footer { font-family: "Satoshi", var(--font-merriweather-sans), sans-serif; }
 .fz-site { color: var(--fz-ink); background: var(--fz-paper); }
 .fz-site main { width: 100%; max-width: 100%; overflow-x: clip; }
