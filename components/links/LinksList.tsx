@@ -13,7 +13,7 @@ export function LinksList() {
   const links = [
     { label: fr ? "Appeler le studio" : "Call the studio", detail: "+212 7 77 77 99 09", href: "tel:+212777779909", icon: faPhone },
     { label: "WhatsApp", detail: fr ? "Écrivez-nous directement" : "Message us directly", href: "https://wa.me/212777779909", icon: faWhatsapp },
-    { label: "Instagram", detail: "@f.zconcept", href: "https://www.instagram.com/f.zconcept", icon: faInstagram },
+    { label: "Instagram", detail: "@fzconcept.agency", href: "https://www.instagram.com/fzconcept.agency", icon: faInstagram },
     { label: "Email", detail: "contact@fzconcept.agency", href: "mailto:contact@fzconcept.agency", icon: faEnvelope },
     { label: fr ? "Explorer le site" : "Explore the website", detail: "fzconcept.agency", href: "/", icon: faGlobe },
   ]

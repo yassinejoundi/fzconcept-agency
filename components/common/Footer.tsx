@@ -29,7 +29,7 @@ export function Footer() {
           <a href="tel:+212777779909"><FontAwesomeIcon icon={faPhone} aria-hidden="true" /> +212 7 77 77 99 09</a>
           <a href="mailto:contact@fzconcept.agency"><FontAwesomeIcon icon={faEnvelope} aria-hidden="true" /> contact@fzconcept.agency</a>
           <a href="https://wa.me/212777779909" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faWhatsapp} aria-hidden="true" /> WhatsApp <FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></a>
-          <a href="https://www.instagram.com/f.zconcept" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} aria-hidden="true" /> @f.zconcept <FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></a>
+          <a href="https://www.instagram.com/fzconcept.agency" target="_blank" rel="noopener noreferrer"><FontAwesomeIcon icon={faInstagram} aria-hidden="true" /> @fzconcept.agency <FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></a>
         </div>
         <div className="fz-footer-column fz-footer-place">
           <h2>{fr ? "Notre adresse" : "Based in"}</h2>
