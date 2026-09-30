@@ -19,7 +19,7 @@ export function PageMotion() {
       gsap.utils.toArray<HTMLElement>("[data-fz-pin]").forEach((chapter) => {
         const heading = chapter.querySelector<HTMLElement>("[data-fz-pin-heading]")
         if (!heading) return
-        ScrollTrigger.create({ trigger: chapter, pin: heading, pinSpacing: false, start: "top 110px", end: "bottom 70%" })
+        ScrollTrigger.create({ trigger: chapter, pin: heading, pinSpacing: false, start: "top 110px", end: "bottom bottom" })
       })
     })
     return () => media.revert()

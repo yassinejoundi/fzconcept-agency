@@ -544,12 +544,12 @@
 .fz-six-steps span { color: var(--fz-brass); font-family: var(--font-fraunces), Georgia, serif; font-size: 1.25rem; }
 .fz-six-steps h3 { color: var(--fz-wine); font-size: clamp(1.4rem, 2.2vw, 2.1rem); }
 .fz-six-steps .fz-text-link { margin-top: 23px; }
-.fz-founder-section { background: var(--fz-wine); color: var(--fz-paper); }
+.fz-founder-section { background: #ded0bf; color: var(--fz-wine); }
 .fz-founder-grid { display: grid; grid-template-columns: .65fr 1fr; gap: clamp(70px, 11vw, 180px); align-items: center; }
 .fz-founder-image { position: relative; width: min(100%, 470px); aspect-ratio: 1; overflow: hidden; background: #d7b89d; }
 .fz-founder-image img { object-fit: cover; }
 .fz-founder-grid blockquote { max-width: 780px; margin: 0; font-family: var(--font-fraunces), Georgia, serif; font-size: clamp(2.4rem, 4.3vw, 4.9rem); line-height: 1.16; }
-.fz-founder-grid cite { display: block; margin-top: 35px; color: #d9b89b; font-family: "Satoshi", sans-serif; font-size: .72rem; font-style: normal; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.fz-founder-grid cite { display: block; margin-top: 35px; color: #71584d; font-family: "Satoshi", sans-serif; font-size: .72rem; font-style: normal; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
 
 .fz-service-accordion { border-top: 1px solid #cdbdae; }
 .fz-service-accordion details { border-bottom: 1px solid #cdbdae; }
