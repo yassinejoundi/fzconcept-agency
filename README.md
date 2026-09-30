@@ -1,132 +1,83 @@
-# FZ Concept — Luxury Interior Design Website
+# FZ Concept
 
-Premium marketing website for **FZ Concept**, a Moroccan interior redesign agency. Built with a brown primary palette and gold accents, with a luxury-first UI system and smooth motion.
+**A home, entirely yours.**
 
-## Tech Stack
+FZ Concept is a Marrakech studio for bespoke furnishing and interior decoration. This bilingual website presents the studio's approach, services, and work through an editorial visual system, then gives visitors a direct path to discuss their project.
 
-- **Next.js (App Router)** + **React**
-- **Tailwind CSS** (CSS variables) + **shadcn/ui**
-- **motion** (animations)
-- **Neon Postgres** (contact submissions + managed admin auth)
+![FZ Concept homepage showing the complete desktop hero](public/readme/fz-concept-preview.png)
+
+## The experience
+
+- **Considered art direction** — oxblood, warm paper, brass details, expressive typography, and interior photography.
+- **A clear studio journey** — work, expertise, studio story, and contact pages lead from inspiration to enquiry.
+- **Personal contact** — the project form stores enquiries in Neon Postgres; an authenticated studio dashboard keeps recent messages together.
+- **English and French** — responsive pages, accessible controls, and reduced-motion support across the site.
+
+## Built with
+
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · GSAP · Font Awesome · Neon Postgres and Auth
 
 ## Routes
 
-**Public**
+| Route | Purpose |
+| --- | --- |
+| `/` | Studio introduction and featured work |
+| `/services` | Interior design and furnishing expertise |
+| `/portfolio` | Project imagery and selected details |
+| `/about` | Studio point of view and process |
+| `/contact` | Project enquiry form and contact details |
+| `/links` | Studio links and contact channels |
+| `/privacy-policy`, `/terms-of-service` | Legal information |
+| `/admin` | Studio sign-in |
+| `/admin/dashboard` | Protected enquiry inbox |
 
-- `/` Home
-- `/services` Services
-- `/portfolio` Portfolio
-- `/about` About
-- `/contact` Contact (submits to `/api/contact`)
-- `/privacy-policy` Privacy Policy
-- `/terms-of-service` Terms of Service
-
-**Admin**
-
-- `/admin` Admin login
-- `/admin/dashboard` Admin dashboard (protected)
-
-## API Routes
-
-- `POST /api/contact` Save contact form submissions to Neon Postgres
-- `/api/auth/*` Neon Managed Auth handler
-- `GET /api/admin/session` Check admin access
-- `GET /api/admin/messages` Fetch latest contact submissions (requires admin session cookie)
-
-## Getting Started
-
-Install dependencies:
+## Run locally
 
 ```bash
 npm install
-```
-
-Run the dev server:
-
-```bash
 npm run dev
 ```
 
-Build for production:
+Open [http://localhost:3000](http://localhost:3000).
 
-```bash
-npm run build
-```
+The public pages run without database credentials. To use the contact form and admin inbox, create `.env.local` with your Neon values:
 
-Lint:
-
-```bash
-npm run lint
-```
-
-## Environment Variables
-
-Use `.env.local` for local values (it’s ignored by Git via `.gitignore`).
-
-```bash
-# Neon (neon deploy supplies DATABASE_URL and NEON_AUTH_BASE_URL)
+```dotenv
 DATABASE_URL=
 NEON_AUTH_BASE_URL=
 NEON_AUTH_COOKIE_SECRET=
-
-# Admin auth (server-only)
 ADMIN_EMAIL_ALLOWLIST=
-
-# Optional hardening (comma-separated origins)
-ALLOWED_ORIGINS=
 ```
 
-Notes:
+`NEON_AUTH_COOKIE_SECRET` must contain at least 32 characters. `ADMIN_EMAIL_ALLOWLIST` is a comma-separated list of approved admin email addresses; an empty list denies dashboard access. Keep all secrets server-side. Set `DATABASE_URL_UNPOOLED` as well when you have a direct Neon connection for migrations.
 
-- `NEON_AUTH_COOKIE_SECRET` must be at least 32 characters. Keep it server-only.
-- Set `ADMIN_EMAIL_ALLOWLIST` to the comma-separated admin addresses. An empty allowlist denies dashboard access.
-- Never commit database credentials or auth secrets.
-
-## Neon Setup
-
-Link this project to the Neon project and production branch, then configure Managed Auth:
+Create the contact table, then provision an admin account in Neon Auth:
 
 ```bash
-neon link --project-id calm-shape-11505688 --branch production -y
-neon config init --services auth
-neon deploy
+npm run db:migrate
 ```
 
-`neon deploy` pulls `DATABASE_URL` and `NEON_AUTH_BASE_URL` into `.env.local`. Add a random `NEON_AUTH_COOKIE_SECRET` of at least 32 characters there and set the same variable in the app host.
+The admin signs in at `/admin`. Contact submissions reach `POST /api/contact`; the protected dashboard reads `GET /api/admin/messages`.
 
-### Create the contact table
-
-Run the checked-in migration against the linked branch with `npm run db:migrate`. It uses Neon’s direct connection when `DATABASE_URL_UNPOOLED` is available and is safe to rerun.
-
-This migration creates an empty Neon table. Existing Supabase contact submissions are not copied.
-
-### Admin account
-
-Create the admin account in Neon Auth, then include its email in `ADMIN_EMAIL_ALLOWLIST`:
+### Useful commands
 
 ```bash
-neon neon-auth user create --email you@example.com --name "Your Name"
+npm run lint        # Check the codebase
+npm run build       # Create a production build
+npm run start       # Serve the production build
 ```
 
-Supabase Auth password hashes and sessions do not transfer. Set a new Neon Auth password for each moved account.
+## Project structure
 
-## Admin Dashboard
+```text
+app/         Pages, API routes, metadata, and global styles
+components/  Public sections, shared navigation, and admin UI
+lib/         Locale, database, and authentication helpers
+database/    Contact-submission migration
+public/      Optimized imagery, fonts, and README preview
+DESIGN.md    Visual direction and interaction rules
+```
 
-- Login at `/admin` with Neon Auth credentials.
-- Dashboard loads messages from `/api/admin/messages` and displays the latest submissions.
+## Credits
 
-## Deployment
-
-Deploy to Vercel (recommended):
-
-- Set environment variables in the Vercel dashboard (do not rely on local `.env`).
-- Ensure server-only variables are not prefixed with `NEXT_PUBLIC_`.
-
-## Contact
-
-- Twitter/X: `@mee_yassine`
-- Instagram: `@yassine_joundi`
-- LinkedIn: `Yassine Joundi`
-- Email: `joundiyassine@outlook.com`
-
-⭐ Star this repo if you find it helpful!
+Website designed and built by [Yassine Joundi](https://yassinejoundi.com) for FZ Concept. © 2026 FZ Concept.
