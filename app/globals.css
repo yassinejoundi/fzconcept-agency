@@ -698,6 +698,8 @@
 @media (prefers-reduced-motion: reduce) { .fz-select-wrap > svg { transition: none; } }
 .fz-field textarea { resize: vertical; }
 .fz-field input:focus-visible, .fz-field select:focus-visible, .fz-field textarea:focus-visible { outline: 2px solid var(--fz-wine); outline-offset: 2px; }
+.fz-field [aria-invalid="true"] { border-color: #9b2f32; }
+.fz-field-error { display: block; color: #8c282a; font-size: .78rem; font-weight: 700; line-height: 1.4; }
 .fz-field textarea::placeholder { color: #71645c; }
 .fz-consent { display: flex; align-items: start; gap: 12px; font-size: .82rem; line-height: 1.55; }
 .fz-consent input { width: 20px; height: 20px; flex: none; margin-top: 1px; accent-color: var(--fz-wine); }

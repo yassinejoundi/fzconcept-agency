@@ -7,11 +7,14 @@ import { faArrowUpRightFromSquare, faChevronDown, faEnvelope, faLocationDot, faP
 import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import { useI18n } from "@/components/common/I18nProvider"
 
+type FieldError = "required" | "invalid"
+
 export function FormSection() {
   const { locale } = useI18n()
   const fr = locale === "fr"
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
   const [error, setError] = useState("")
+  const [fieldErrors, setFieldErrors] = useState<Record<string, FieldError>>({})
   const copy = fr ? {
     eyebrow: "Votre projet commence ici",
     title: "Racontez-nous votre espace.",
@@ -31,6 +34,8 @@ export function FormSection() {
     success: "Votre message a bien été envoyé. Merci de nous avoir écrit.",
     failure: "Impossible d’envoyer le message. Vérifiez votre connexion et réessayez.",
     tooMany: "Trop de tentatives. Réessayez dans quelques minutes.",
+    required: "Champ obligatoire.",
+    invalid: "Vérifiez ce champ.",
     elsewhere: "Ou contactez-nous directement",
   } : {
     eyebrow: "Your project starts here",
@@ -51,12 +56,25 @@ export function FormSection() {
     success: "Your message has been sent. Thank you for writing to us.",
     failure: "Unable to send your message. Check your connection and try again.",
     tooMany: "Too many attempts. Please try again in a few minutes.",
+    required: "Required field.",
+    invalid: "Check this field.",
     elsewhere: "Or reach us directly",
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
+    const invalid = Array.from(form.elements).filter(
+      (field): field is HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement =>
+        (field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) && !field.validity.valid
+    )
+    if (invalid.length) {
+      setFieldErrors(Object.fromEntries(invalid.map((field) => [field.id, field.validity.valueMissing ? "required" : "invalid"])))
+      setStatus("idle")
+      invalid[0].focus()
+      return
+    }
+    setFieldErrors({})
     const data = new FormData(form)
     setStatus("submitting")
     setError("")
@@ -80,6 +98,23 @@ export function FormSection() {
     }
   }
 
+  function updateFieldError(event: FormEvent<HTMLFormElement>) {
+    const field = event.target
+    if (field instanceof HTMLInputElement || field instanceof HTMLSelectElement || field instanceof HTMLTextAreaElement) {
+      setFieldErrors((current) => {
+        if (!current[field.id]) return current
+        const next = { ...current }
+        if (field.validity.valid) delete next[field.id]
+        else next[field.id] = field.validity.valueMissing ? "required" : "invalid"
+        return next
+      })
+    }
+  }
+
+  function validationText(id: string) {
+    return fieldErrors[id] ? <small className="fz-field-error" id={`${id}-error`} role="alert">{fieldErrors[id] === "required" ? copy.required : copy.invalid}</small> : null
+  }
+
   return (
     <section className="fz-section fz-contact-section" id="contact-form">
       <div className="fz-shell fz-contact-grid">
@@ -97,19 +132,19 @@ export function FormSection() {
           </div>
         </div>
 
-        <form className="fz-contact-form" onSubmit={handleSubmit}>
+        <form className="fz-contact-form" noValidate onSubmit={handleSubmit} onChange={updateFieldError}>
           <div className="fz-honeypot" aria-hidden="true"><label htmlFor="fz-website">Website</label><input id="fz-website" name="website" type="text" tabIndex={-1} autoComplete="off" /></div>
           <div className="fz-field-row">
-            <div className="fz-field"><label htmlFor="fz-name">{copy.name}</label><input id="fz-name" name="name" type="text" autoComplete="name" minLength={2} maxLength={200} required /></div>
-            <div className="fz-field"><label htmlFor="fz-email">{copy.email}</label><input id="fz-email" name="email" type="email" autoComplete="email" maxLength={320} required /></div>
+            <div className="fz-field"><label htmlFor="fz-name">{copy.name}</label><input id="fz-name" name="name" type="text" autoComplete="name" minLength={2} maxLength={200} required aria-invalid={Boolean(fieldErrors["fz-name"])} aria-describedby={fieldErrors["fz-name"] ? "fz-name-error" : undefined} />{validationText("fz-name")}</div>
+            <div className="fz-field"><label htmlFor="fz-email">{copy.email}</label><input id="fz-email" name="email" type="email" autoComplete="email" maxLength={320} required aria-invalid={Boolean(fieldErrors["fz-email"])} aria-describedby={fieldErrors["fz-email"] ? "fz-email-error" : undefined} />{validationText("fz-email")}</div>
           </div>
           <div className="fz-field-row">
-            <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} required /></div>
+            <div className="fz-field"><label htmlFor="fz-phone">{copy.phone}</label><input id="fz-phone" name="phone" type="tel" autoComplete="tel" maxLength={50} required aria-invalid={Boolean(fieldErrors["fz-phone"])} aria-describedby={fieldErrors["fz-phone"] ? "fz-phone-error" : undefined} />{validationText("fz-phone")}</div>
             <div className="fz-field"><label htmlFor="fz-location">{copy.location}</label><input id="fz-location" name="location" type="text" autoComplete="address-level2" maxLength={120} /></div>
           </div>
-          <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><div className="fz-select-wrap"><select id="fz-reason" name="reason" defaultValue="" required><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select><FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /></div></div>
-          <div className="fz-field"><label htmlFor="fz-message">{copy.message}</label><textarea id="fz-message" name="message" rows={6} minLength={10} maxLength={5000} placeholder={copy.messageHint} required /></div>
-          <div className="fz-consent"><input id="fz-privacy" type="checkbox" required /><label htmlFor="fz-privacy">{fr ? "J’accepte la " : "I agree to the "}<Link href="/privacy-policy">{copy.privacy}</Link>.</label></div>
+          <div className="fz-field"><label htmlFor="fz-reason">{copy.reason}</label><div className="fz-select-wrap"><select id="fz-reason" name="reason" defaultValue="" required aria-invalid={Boolean(fieldErrors["fz-reason"])} aria-describedby={fieldErrors["fz-reason"] ? "fz-reason-error" : undefined}><option value="" disabled>{copy.reasonPlaceholder}</option>{copy.reasons.map((reason, index) => <option key={reason} value={["interior", "furniture", "decoration", "other"][index]}>{reason}</option>)}</select><FontAwesomeIcon icon={faChevronDown} aria-hidden="true" /></div>{validationText("fz-reason")}</div>
+          <div className="fz-field"><label htmlFor="fz-message">{copy.message}</label><textarea id="fz-message" name="message" rows={6} minLength={10} maxLength={5000} placeholder={copy.messageHint} required aria-invalid={Boolean(fieldErrors["fz-message"])} aria-describedby={fieldErrors["fz-message"] ? "fz-message-error" : undefined} />{validationText("fz-message")}</div>
+          <div><div className="fz-consent"><input id="fz-privacy" type="checkbox" required aria-invalid={Boolean(fieldErrors["fz-privacy"])} aria-describedby={fieldErrors["fz-privacy"] ? "fz-privacy-error" : undefined} /><label htmlFor="fz-privacy">{fr ? "J’accepte la " : "I agree to the "}<Link href="/privacy-policy">{copy.privacy}</Link>.</label></div>{validationText("fz-privacy")}</div>
           <button className="fz-button fz-button-dark" type="submit" disabled={status === "submitting"}>{status === "submitting" ? copy.sending : copy.send}<FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></button>
           <p className="fz-form-feedback" role={status === "error" ? "alert" : "status"}>{status === "success" ? copy.success : status === "error" ? error : ""}</p>
         </form>
