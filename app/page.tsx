@@ -199,7 +199,7 @@ export default function Home() {
         <section className="fz-studio fz-section" aria-labelledby="fz-studio-heading">
           <div className="fz-shell fz-studio-grid">
             <div className="fz-studio-copy"><p className="fz-kicker">{copy.studioLead}</p><h2 id="fz-studio-heading">{copy.studio}</h2><p className="fz-studio-quote" aria-live="polite">“{copy.quotes[quote]}”</p><div className="fz-quote-controls"><span>0{quote + 1} / 0{copy.quotes.length}</span><button type="button" aria-label={copy.quotePrev} onClick={() => changeQuote(-1)}><FontAwesomeIcon icon={faArrowLeft} aria-hidden="true" /></button><button type="button" aria-label={copy.quoteNext} onClick={() => changeQuote(1)}><FontAwesomeIcon icon={faArrowRight} aria-hidden="true" /></button></div></div>
-            <div className="fz-studio-media fz-reveal-image"><Image src="/images/founder.webp" alt={fr ? "Designer de FZ Concept devant une planche d’ambiance et des échantillons" : "FZ Concept designer reviewing an interior moodboard and material samples"} fill sizes="(max-width: 800px) 100vw, 35vw" /></div>
+            <div className="fz-studio-media fz-reveal-image"><Image src="/images/founder-portrait.webp" alt={fr ? "Designer de FZ Concept devant une planche d’ambiance et des échantillons" : "FZ Concept designer reviewing an interior moodboard and material samples"} fill sizes="(max-width: 800px) 100vw, 35vw" /></div>
           </div>
         </section>
 

@@ -112,7 +112,7 @@ export default async function AboutPage() {
 
         <section className="fz-section fz-founder-section">
           <div className="fz-shell fz-founder-grid">
-            <div className="fz-founder-image" data-fz-image><Image src="/images/founder.webp" alt={fr ? "Designer de FZ Concept étudiant des matières" : "FZ Concept designer reviewing materials"} fill sizes="(max-width: 700px) 100vw, 35vw" /></div>
+            <div className="fz-founder-image" data-fz-image><Image src="/images/founder-portrait.webp" alt={fr ? "Designer de FZ Concept étudiant des matières" : "FZ Concept designer reviewing materials"} fill sizes="(max-width: 700px) 100vw, 35vw" /></div>
             <blockquote>“{copy.quote}”<cite>FZ Concept · Marrakech</cite></blockquote>
           </div>
         </section>
