@@ -43,6 +43,10 @@ The portfolio uses the labelled project photographs embedded in `.project/FZ fla
 - All links and controls have visible keyboard focus. Touch targets are at least 44px. Verify 320px, 375px, tablet, and wide desktop without horizontal overflow.
 - Provide meaningful alt text, real destinations, legible contrast, and no fabricated testimonials or metrics.
 
+## Admin workspace
+
+Admin routes use the same palette and type with tighter spacing for daily work. Sign-in can use one atmospheric image; the dashboard gives messages priority over decorative cards or unverified metrics. Use a simple private header, clear account and sign-out controls, and a single readable inbox. Show explicit loading, empty, and error states. Keep reply and call actions close to each enquiry and preserve the existing auth and messages API. Use native controls and Font Awesome icons; avoid shadcn elements.
+
 ## Scope
 
-The editorial system covers all public routes and the shared navbar and footer. Admin routes remain separate. New public elements use semantic HTML and CSS, never shadcn components. Reuse existing Next.js routing, locale context, and contact API; add dependencies only for required Font Awesome and GSAP behavior.
+The editorial system covers public routes and the shared navbar and footer. Admin routes use a compact workspace variant with their own header and footer. Reuse existing Next.js routing, locale context, auth, and contact API.

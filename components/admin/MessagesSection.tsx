@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { MapPin, Phone, RefreshCw } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowRight, faEnvelope, faInbox, faLocationDot, faPhone, faRotate } from "@fortawesome/free-solid-svg-icons"
+import { useI18n } from "@/components/common/I18nProvider"
 
 type ContactMessage = {
   id: string
@@ -17,50 +18,80 @@ type ContactMessage = {
   page_url: string | null
 }
 
-type ApiResponse =
-  | { ok: true; messages: ContactMessage[] }
-  | { ok: false; error: string }
+type ApiResponse = { ok: true; messages: ContactMessage[] } | { ok: false; error: string }
+type LoadResult = { ok: true; messages: ContactMessage[] } | { ok: false; unauthorized: boolean }
 
-function formatDate(value: string) {
+async function requestMessages(signal?: AbortSignal): Promise<LoadResult> {
+  try {
+    const response = await fetch("/api/admin/messages", {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+      signal,
+    })
+    if (response.status === 401 || response.status === 403) return { ok: false, unauthorized: true }
+    const data = (await response.json().catch(() => null)) as ApiResponse | null
+    if (!response.ok || !data || !data.ok) return { ok: false, unauthorized: false }
+    return { ok: true, messages: data.messages ?? [] }
+  } catch {
+    return { ok: false, unauthorized: false }
+  }
+}
+
+function formatDate(value: string, fr: boolean) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return ""
-  return date.toLocaleString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  })
+  return new Intl.DateTimeFormat(fr ? "fr-MA" : "en-GB", {
+    year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
+  }).format(date)
+}
+
+function reasonLabel(reason: string | null, fr: boolean) {
+  if (!reason) return fr ? "Demande générale" : "General enquiry"
+  const labels: Record<string, [string, string]> = {
+    interior: ["Aménagement intérieur", "Interior furnishing"],
+    furniture: ["Ameublement sur mesure", "Bespoke furniture"],
+    decoration: ["Décoration", "Decoration"],
+    other: ["Autre demande", "Other enquiry"],
+  }
+  return labels[reason]?.[fr ? 0 : 1] ?? reason
 }
 
 export function MessagesSection() {
+  const { locale } = useI18n()
+  const fr = locale === "fr"
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
   const [messages, setMessages] = useState<ContactMessage[]>([])
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  async function requestMessages(signal?: AbortSignal) {
-    try {
-      const response = await fetch("/api/admin/messages", {
-        method: "GET",
-        headers: { Accept: "application/json" },
-        signal,
-      })
-
-      const data = (await response
-        .json()
-        .catch(() => null)) as ApiResponse | null
-      if (!response.ok || !data || data.ok === false) {
-        return {
-          ok: false as const,
-          error:
-            data && "error" in data ? data.error : "Failed to load messages.",
-        }
-      }
-
-      return { ok: true as const, messages: data.messages ?? [] }
-    } catch {
-      return { ok: false as const, error: "Failed to load messages." }
-    }
+  const [unauthorized, setUnauthorized] = useState(false)
+  const copy = fr ? {
+    eyebrow: "Boîte de réception",
+    title: "Dernières demandes",
+    count: (count: number) => `${count} message${count > 1 ? "s" : ""} récent${count > 1 ? "s" : ""}`,
+    refresh: "Actualiser",
+    loading: "Chargement des demandes…",
+    error: "Impossible de charger les messages. Réessayez.",
+    expired: "Votre session a expiré. Reconnectez-vous pour voir les demandes.",
+    signIn: "Se reconnecter",
+    emptyTitle: "Aucun message pour le moment.",
+    emptyText: "Les demandes envoyées depuis le formulaire apparaîtront ici.",
+    contact: "Voir le formulaire",
+    reply: "Répondre",
+    call: "Appeler",
+    source: "Page d’origine",
+  } : {
+    eyebrow: "Inbox",
+    title: "Latest enquiries",
+    count: (count: number) => `${count} recent message${count === 1 ? "" : "s"}`,
+    refresh: "Refresh",
+    loading: "Loading enquiries…",
+    error: "Unable to load messages. Try again.",
+    expired: "Your session has expired. Sign in again to view enquiries.",
+    signIn: "Sign in again",
+    emptyTitle: "No messages yet.",
+    emptyText: "Enquiries sent through the contact form will appear here.",
+    contact: "View contact form",
+    reply: "Reply",
+    call: "Call",
+    source: "Source page",
   }
 
   useEffect(() => {
@@ -68,24 +99,22 @@ export function MessagesSection() {
     void requestMessages(controller.signal).then((result) => {
       if (controller.signal.aborted) return
       if (!result.ok) {
+        setUnauthorized(result.unauthorized)
         setStatus("error")
-        setErrorMessage(result.error)
         return
       }
       setMessages(result.messages)
       setStatus("ready")
     })
-
     return () => controller.abort()
   }, [])
 
   async function refresh() {
     setStatus("loading")
-    setErrorMessage(null)
     const result = await requestMessages()
     if (!result.ok) {
+      setUnauthorized(result.unauthorized)
       setStatus("error")
-      setErrorMessage(result.error)
       return
     }
     setMessages(result.messages)
@@ -93,128 +122,58 @@ export function MessagesSection() {
   }
 
   return (
-    <div className="mt-10 rounded-2xl border border-border bg-card p-8 shadow-sm md:p-10">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+    <section className="fz-admin-inbox fz-admin-shell" aria-labelledby="fz-admin-inbox-title">
+      <div className="fz-admin-inbox-header">
         <div>
-          <p className="text-sm font-bold uppercase text-gold tracking-widest">
-            Messages
-          </p>
-          <h2 className="mt-2 font-serif text-3xl font-bold text-foreground md:text-4xl">
-            Latest Inquiries
-          </h2>
-          <p className="mt-3 font-sans text-sm text-muted-foreground">
-            Showing the latest{" "}
-            <span className="text-foreground">{messages.length}</span> messages.
-          </p>
+          <p className="fz-admin-kicker">{copy.eyebrow}</p>
+          <h2 id="fz-admin-inbox-title">{copy.title}</h2>
+          <p className="fz-admin-inbox-count" role="status" aria-live="polite">{status === "ready" ? copy.count(messages.length) : ""}</p>
         </div>
-
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => void refresh()}
-          disabled={status === "loading"}
-          className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-        >
-          <RefreshCw className="mr-2 h-5 w-5" />
-          Refresh
-        </Button>
+        <button className="fz-admin-refresh" type="button" onClick={() => void refresh()} disabled={status === "loading"}>
+          <FontAwesomeIcon icon={faRotate} aria-hidden="true" />{copy.refresh}
+        </button>
       </div>
 
       {status === "loading" ? (
-        <div className="mt-8 rounded-xl border border-border bg-secondary/40 p-6">
-          <p className="font-sans text-sm text-muted-foreground">
-            Loading messages...
-          </p>
-        </div>
+        <div className="fz-admin-state" role="status">{copy.loading}</div>
       ) : status === "error" ? (
-        <div className="mt-8 rounded-xl border border-border bg-secondary/40 p-6">
-          <p className="font-sans text-sm text-destructive">
-            {errorMessage ?? "Failed to load messages."}
-          </p>
+        <div className="fz-admin-state fz-admin-error" role="alert">
+          <p>{unauthorized ? copy.expired : copy.error}</p>
+          {unauthorized ? <Link className="fz-admin-text-link" href="/admin">{copy.signIn}<FontAwesomeIcon icon={faArrowRight} aria-hidden="true" /></Link> :
+            <button className="fz-admin-text-link" type="button" onClick={() => void refresh()}>{copy.refresh}<FontAwesomeIcon icon={faArrowRight} aria-hidden="true" /></button>}
         </div>
       ) : messages.length === 0 ? (
-        <div className="mt-8 rounded-xl border border-border bg-secondary/40 p-6">
-          <p className="font-sans text-sm text-muted-foreground">
-            No messages yet. When a visitor submits the contact form, it will
-            appear here.
-          </p>
+        <div className="fz-admin-state fz-admin-empty">
+          <FontAwesomeIcon icon={faInbox} aria-hidden="true" />
+          <h3>{copy.emptyTitle}</h3>
+          <p>{copy.emptyText}</p>
+          <Link className="fz-admin-text-link" href="/contact">{copy.contact}<FontAwesomeIcon icon={faArrowRight} aria-hidden="true" /></Link>
         </div>
       ) : (
-        <div className="mt-8 grid gap-4">
+        <div className="fz-admin-message-list">
           {messages.map((message) => (
-            <div
-              key={message.id}
-              className="rounded-2xl border border-border bg-background p-6 shadow-sm"
-            >
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <p className="font-serif text-xl font-bold text-foreground">
-                      {message.name}
-                    </p>
-                    <span className="text-xs font-sans text-muted-foreground">
-                      {formatDate(message.created_at)}
-                    </span>
-                  </div>
-
-                  <div className="mt-2 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                    <a
-                      href={`mailto:${message.email}`}
-                      className="font-sans hover:text-gold transition-colors"
-                    >
-                      {message.email}
-                    </a>
-                    {message.phone ? (
-                      <span className="inline-flex items-center gap-2 font-sans">
-                        <Phone className="h-4 w-4 text-gold" />
-                        {message.phone}
-                      </span>
-                    ) : null}
-                    {message.location ? (
-                      <span className="inline-flex items-center gap-2 font-sans">
-                        <MapPin className="h-4 w-4 text-gold" />
-                        {message.location}
-                      </span>
-                    ) : null}
-                    {message.reason ? (
-                      <span className="font-sans">{message.reason}</span>
-                    ) : null}
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                  >
-                    <a href={`mailto:${message.email}`}>Reply</a>
-                  </Button>
-                  {message.phone ? (
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                    >
-                      <a href={`tel:${message.phone}`}>Call</a>
-                    </Button>
-                  ) : null}
-                </div>
+            <article className="fz-admin-message" key={message.id}>
+              <header className="fz-admin-message-head">
+                <div><p>{reasonLabel(message.reason, fr)}</p><h3>{message.name}</h3></div>
+                <time dateTime={message.created_at}>{formatDate(message.created_at, fr)}</time>
+              </header>
+              <div className="fz-admin-message-contact">
+                <a href={`mailto:${message.email}`}><FontAwesomeIcon icon={faEnvelope} aria-hidden="true" />{message.email}</a>
+                {message.phone ? <a href={`tel:${message.phone}`}><FontAwesomeIcon icon={faPhone} aria-hidden="true" />{message.phone}</a> : null}
+                {message.location ? <span><FontAwesomeIcon icon={faLocationDot} aria-hidden="true" />{message.location}</span> : null}
               </div>
-
-              <p className="mt-5 whitespace-pre-line font-sans text-sm leading-relaxed text-foreground">
-                {message.message}
-              </p>
-
-              {message.page_url ? (
-                <p className="mt-4 font-sans text-xs text-muted-foreground">
-                  Source: {message.page_url}
-                </p>
-              ) : null}
-            </div>
+              <p className="fz-admin-message-body">{message.message}</p>
+              <footer className="fz-admin-message-footer">
+                {message.page_url ? <p><span>{copy.source}</span>{message.page_url}</p> : <span />}
+                <div>
+                  <a className="fz-admin-reply" href={`mailto:${message.email}`}>{copy.reply}<FontAwesomeIcon icon={faArrowRight} aria-hidden="true" /></a>
+                  {message.phone ? <a className="fz-admin-call" href={`tel:${message.phone}`}>{copy.call}</a> : null}
+                </div>
+              </footer>
+            </article>
           ))}
         </div>
       )}
-    </div>
+    </section>
   )
 }

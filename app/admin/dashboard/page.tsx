@@ -1,112 +1,55 @@
-import Link from "next/link"
 import { redirect } from "next/navigation"
-import { LayoutDashboard, Mail } from "lucide-react"
-
-import { NavbarSection } from "@/components/common/NavbarSection"
+import { AdminHeader } from "@/components/admin/AdminHeader"
 import { MessagesSection } from "@/components/admin/MessagesSection"
-import { SignOutButton } from "@/components/admin/SignOutButton"
-import { Button } from "@/components/ui/button"
 import { getAdminSession } from "@/lib/adminAuth"
+import { getRequestLocale } from "@/lib/locale.server"
 
 export const dynamic = "force-dynamic"
 
 export default async function AdminDashboardPage() {
   const session = await getAdminSession()
-
   if (!session) redirect("/admin")
 
+  const fr = (await getRequestLocale()) === "fr"
+  const copy = fr ? {
+    skip: "Aller aux demandes",
+    eyebrow: "Espace studio · Marrakech",
+    title: "Vos demandes, en un lieu.",
+    intro: "Consultez les messages envoyés depuis le site et poursuivez chaque conversation directement.",
+    signedIn: "Session ouverte avec",
+    footer: "Espace privé du studio",
+  } : {
+    skip: "Skip to enquiries",
+    eyebrow: "Studio workspace · Marrakech",
+    title: "Your enquiries, in one place.",
+    intro: "Review messages from the website and continue each conversation directly.",
+    signedIn: "Signed in as",
+    footer: "Private studio workspace",
+  }
+
   return (
-    <div>
-      <NavbarSection />
-      <main>
-        <section className="bg-secondary/20">
-          <div className="mx-auto w-full max-w-7xl px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
-            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="text-sm font-bold uppercase text-gold tracking-widest">
-                  Dashboard
-                </p>
-                <h1 className="mt-2 font-serif text-4xl font-bold text-primary md:text-6xl">
-                  Admin Overview
-                </h1>
-                <p className="mt-4 font-sans text-muted-foreground">
-                  Signed in as{" "}
-                  <span className="text-foreground">{session.email}</span>
-                </p>
-              </div>
-
-              <SignOutButton />
+    <div className="fz-admin fz-admin-dashboard">
+      <a className="fz-admin-skip" href="#admin-main">{copy.skip}</a>
+      <AdminHeader signedIn />
+      <main id="admin-main">
+        <section className="fz-admin-dashboard-hero">
+          <div className="fz-admin-shell fz-admin-dashboard-hero-grid">
+            <div>
+              <p className="fz-admin-kicker">{copy.eyebrow}</p>
+              <h1>{copy.title}</h1>
+              <p className="fz-admin-dashboard-intro">{copy.intro}</p>
+            </div>
+            <div className="fz-admin-account">
+              <span>{copy.signedIn}</span>
+              <strong>{session.email}</strong>
             </div>
           </div>
         </section>
-
-        <section className="bg-background">
-          <div className="mx-auto w-full max-w-7xl px-6 py-16 md:px-10 md:py-20">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-serif text-2xl font-bold text-foreground">
-                      Inquiries
-                    </p>
-                    <p className="mt-2 font-sans text-sm text-muted-foreground">
-                      Review and respond to contact messages.
-                    </p>
-                  </div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary ring-1 ring-gold/20">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <Button
-                    asChild
-                    className="rounded-xl bg-primary text-primary-foreground shadow-lg transition-all hover:bg-primary/90"
-                  >
-                    <Link href="/contact">
-                      <LayoutDashboard className="mr-2 h-5 w-5" />
-                      Go to Contact Page
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-                <p className="font-serif text-2xl font-bold text-foreground">
-                  Quick Links
-                </p>
-                <p className="mt-2 font-sans text-sm text-muted-foreground">
-                  Jump to key pages.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                  >
-                    <Link href="/services">Services</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                  >
-                    <Link href="/portfolio">Portfolio</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-                  >
-                    <Link href="/">Home</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <MessagesSection />
-          </div>
-        </section>
+        <MessagesSection />
       </main>
+      <footer className="fz-admin-dashboard-footer">
+        <div className="fz-admin-shell"><span>© {new Date().getFullYear()} FZ Concept</span><span>{copy.footer}</span></div>
+      </footer>
     </div>
   )
 }

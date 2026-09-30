@@ -3,15 +3,17 @@
 import { FormEvent, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Eye, EyeOff } from "lucide-react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons"
 import { useRouter } from "next/navigation"
 
 import { useI18n } from "@/components/common/I18nProvider"
+import { AdminHeader } from "@/components/admin/AdminHeader"
 import { authClient } from "@/lib/auth/client"
 
 export default function AdminLoginPage() {
   const router = useRouter()
-  const { locale, setLocale } = useI18n()
+  const { locale } = useI18n()
   const fr = locale === "fr"
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
@@ -19,9 +21,6 @@ export default function AdminLoginPage() {
   const text = fr
     ? {
         skip: "Aller à la connexion",
-        nav: "Navigation du studio",
-        language: "Langue",
-        website: "Voir le site",
         studio: "FZ Concept · Marrakech",
         imageCaption: "Un intérieur pensé autour de vous.",
         eyebrow: "Espace studio",
@@ -44,9 +43,6 @@ export default function AdminLoginPage() {
       }
     : {
         skip: "Skip to sign in",
-        nav: "Studio navigation",
-        language: "Language",
-        website: "View website",
         studio: "FZ Concept · Marrakech",
         imageCaption: "A home shaped around its owner.",
         eyebrow: "Studio access",
@@ -101,14 +97,8 @@ export default function AdminLoginPage() {
     }
   }
 
-  function changeLocale(next: "en" | "fr") {
-    if (next === locale) return
-    setLocale(next)
-    router.refresh()
-  }
-
   return (
-    <div className="min-h-svh bg-[#f5f0e9] font-body text-[#251716]">
+    <div className="fz-admin min-h-svh bg-[#f5f0e9] text-[#251716]">
       <a
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-[#3c1012] focus:px-4 focus:py-3 focus:text-[#f5f0e9] focus:outline-2 focus:outline-offset-2 focus:outline-[#251716]"
         href="#admin-main"
@@ -116,55 +106,7 @@ export default function AdminLoginPage() {
         {text.skip}
       </a>
 
-      <header className="flex min-h-[4.5rem] items-center justify-between gap-3 border-b border-[#d5c5b4] px-4 sm:px-8">
-        <Link
-          className="inline-flex min-h-11 items-baseline gap-2 text-[#3c1012] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
-          href="/"
-          aria-label="FZ Concept — home"
-        >
-          <span className="font-headline text-3xl leading-none tracking-[-0.08em]">
-            FZ
-          </span>
-          <span className="hidden text-[0.62rem] font-bold tracking-[0.25em] min-[360px]:inline-block">
-            CONCEPT
-          </span>
-        </Link>
-
-        <nav className="flex items-center gap-2 sm:gap-5" aria-label={text.nav}>
-          <div
-            className="flex items-center"
-            role="group"
-            aria-label={text.language}
-          >
-            <button
-              className={`min-h-11 min-w-10 px-2 text-xs font-bold tracking-[0.1em] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012] ${!fr ? "text-[#3c1012] underline" : "text-[#675751] hover:text-[#3c1012]"}`}
-              type="button"
-              aria-pressed={!fr}
-              onClick={() => changeLocale("en")}
-            >
-              EN
-            </button>
-            <span aria-hidden="true" className="text-[#a6814d]">
-              /
-            </span>
-            <button
-              className={`min-h-11 min-w-10 px-2 text-xs font-bold tracking-[0.1em] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012] ${fr ? "text-[#3c1012] underline" : "text-[#675751] hover:text-[#3c1012]"}`}
-              type="button"
-              aria-pressed={fr}
-              onClick={() => changeLocale("fr")}
-            >
-              FR
-            </button>
-          </div>
-          <span aria-hidden="true" className="h-5 w-px bg-[#d5c5b4]" />
-          <Link
-            className="inline-flex min-h-11 items-center px-1 text-sm font-semibold text-[#3c1012] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3c1012]"
-            href="/"
-          >
-            {text.website}
-          </Link>
-        </nav>
-      </header>
+      <AdminHeader />
 
       <main
         className="mx-auto grid min-h-[calc(100svh-4.5rem)] w-full max-w-[1440px] grid-flow-dense lg:grid-cols-2"
@@ -249,9 +191,9 @@ export default function AdminLoginPage() {
                     type="button"
                   >
                     {isPasswordVisible ? (
-                      <EyeOff aria-hidden="true" className="size-5" />
+                      <FontAwesomeIcon icon={faEyeSlash} aria-hidden="true" className="size-5" />
                     ) : (
-                      <Eye aria-hidden="true" className="size-5" />
+                      <FontAwesomeIcon icon={faEye} aria-hidden="true" className="size-5" />
                     )}
                   </button>
                 </div>

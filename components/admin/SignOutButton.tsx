@@ -2,15 +2,18 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { LogOut } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons"
+import { useI18n } from "@/components/common/I18nProvider"
 import { authClient } from "@/lib/auth/client"
 
 export function SignOutButton() {
   const router = useRouter()
+  const { locale } = useI18n()
+  const fr = locale === "fr"
   const [pending, setPending] = useState(false)
   const [failed, setFailed] = useState(false)
+  const label = pending ? (fr ? "Déconnexion…" : "Signing out…") : (fr ? "Se déconnecter" : "Sign out")
 
   async function signOut() {
     setPending(true)
@@ -31,22 +34,12 @@ export function SignOutButton() {
   }
 
   return (
-    <div>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => void signOut()}
-        disabled={pending}
-        className="rounded-xl border-2 border-primary/20 bg-white/80 text-primary shadow-lg transition-all duration-300 hover:border-gold hover:bg-white hover:text-gold"
-      >
-        <LogOut className="mr-2 h-5 w-5" />
-        {pending ? "Signing out..." : "Sign Out"}
-      </Button>
-      {failed ? (
-        <p role="alert" className="mt-2 text-sm text-destructive">
-          Sign out failed. Please try again.
-        </p>
-      ) : null}
+    <div className="fz-admin-signout-wrap">
+      <button className="fz-admin-signout" type="button" onClick={() => void signOut()} disabled={pending} aria-label={label}>
+        <FontAwesomeIcon icon={faArrowRightFromBracket} aria-hidden="true" />
+        <span>{label}</span>
+      </button>
+      {failed ? <p className="fz-admin-signout-error" role="alert">{fr ? "Déconnexion impossible. Réessayez." : "Sign out failed. Try again."}</p> : null}
     </div>
   )
 }
