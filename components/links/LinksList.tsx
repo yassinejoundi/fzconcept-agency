@@ -1,125 +1,39 @@
 "use client"
 
-import {
-  Instagram,
-  Mail,
-  Phone,
-  Globe,
-  MessageCircle,
-  ExternalLink,
-} from "lucide-react"
-import * as motion from "motion/react-client"
 import Image from "next/image"
-import logo from "@/assets/images/fzconcept-logo.png"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faArrowUpRightFromSquare, faEnvelope, faGlobe, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons"
 import { useI18n } from "@/components/common/I18nProvider"
-import { fadeInUp, staggerContainer } from "@/lib/animations"
 
 export function LinksList() {
   const { locale } = useI18n()
-
+  const fr = locale === "fr"
   const links = [
-    {
-      label: "+212 7 77 77 99 09",
-      icon: Phone,
-      href: "tel:+212777779909",
-      type: "external",
-    },
-    {
-      label: "WhatsApp",
-      icon: MessageCircle,
-      href: "https://wa.me/212777779909",
-      type: "external",
-    },
-    {
-      label: "Instagram",
-      icon: Instagram,
-      href: "https://www.instagram.com/f.zconcept",
-      type: "external",
-    },
-    {
-      label: "contact@fzconcept.agency",
-      icon: Mail,
-      href: "mailto:contact@fzconcept.agency",
-      type: "external",
-    },
-    {
-      label: locale === "fr" ? "Visiter le site web" : "Visit Website",
-      icon: Globe,
-      href: "/",
-      type: "internal",
-    },
+    { label: fr ? "Appeler le studio" : "Call the studio", detail: "+212 7 77 77 99 09", href: "tel:+212777779909", icon: faPhone },
+    { label: "WhatsApp", detail: fr ? "Écrivez-nous directement" : "Message us directly", href: "https://wa.me/212777779909", icon: faWhatsapp },
+    { label: "Instagram", detail: "@f.zconcept", href: "https://www.instagram.com/f.zconcept", icon: faInstagram },
+    { label: "Email", detail: "contact@fzconcept.agency", href: "mailto:contact@fzconcept.agency", icon: faEnvelope },
+    { label: fr ? "Explorer le site" : "Explore the website", detail: "fzconcept.agency", href: "/", icon: faGlobe },
   ]
 
   return (
-    <motion.div
-      className="mx-auto w-full max-w-sm px-6 py-12 md:py-20"
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-    >
-      {/* Header / Brand */}
-      <motion.div className="mb-10 text-center" variants={fadeInUp}>
-        <div className="mb-4 flex justify-center">
-          <div className="relative h-28 w-28 overflow-hidden rounded-full border-2 border-gold bg-white shadow-xl shadow-gold/20">
-            <Image
-              src={logo}
-              alt="FZ Concept Logo"
-              fill
-              className="object-center object-cover rounded-full"
-              sizes="112px"
-              priority
-            />
+    <section className="fz-links-layout">
+      <div className="fz-links-image"><Image src="/images/light-dining.webp" alt={fr ? "Salle à manger lumineuse aux matières naturelles" : "Sunlit dining room with natural materials"} fill priority sizes="(max-width: 800px) 100vw, 48vw" /></div>
+      <div className="fz-links-content">
+        <div>
+          <p className="fz-kicker">FZ Concept · Marrakech</p>
+          <h1>{fr ? "Restons en contact." : "Let’s stay in touch."}</h1>
+          <p className="fz-links-intro">{fr ? "Une question, un projet ou une envie à partager ? Choisissez la façon de nous joindre qui vous convient." : "A question, a project, or an idea to share? Reach us in the way that works for you."}</p>
+          <div className="fz-links-list">
+            {links.map((item) => {
+              const inner = <><FontAwesomeIcon icon={item.icon} aria-hidden="true" /><span><strong>{item.label}</strong><small>{item.detail}</small></span><FontAwesomeIcon icon={faArrowUpRightFromSquare} aria-hidden="true" /></>
+              return item.href.startsWith("/") ? <Link key={item.href} href={item.href}>{inner}</Link> : <a key={item.href} href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}>{inner}</a>
+            })}
           </div>
         </div>
-        <h1 className="font-serif text-2xl font-bold text-foreground">
-          FZ Concept
-        </h1>
-        <p className="mt-2 font-sans text-sm text-muted-foreground">
-          {locale === "fr"
-            ? "Architecture d’Intérieur & Design"
-            : "Interior Architecture & Design"}
-        </p>
-      </motion.div>
-
-      {/* Links */}
-      <motion.div className="flex flex-col gap-4" variants={staggerContainer}>
-        {links.map((link, index) => {
-          const Icon = link.icon
-          const isExternal = link.type === "external"
-
-          return (
-            <motion.a
-              key={index}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex w-full items-center justify-between rounded-xl border border-border bg-card px-5 py-4 shadow-sm transition-all duration-300 hover:border-gold hover:shadow-md hover:shadow-gold/10 hover:-translate-y-0.5"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/5 text-primary transition-colors group-hover:bg-gold/10 group-hover:text-gold">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <span className="font-sans font-medium text-foreground">
-                  {link.label}
-                </span>
-              </div>
-              {isExternal && (
-                <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:text-gold" />
-              )}
-            </motion.a>
-          )
-        })}
-      </motion.div>
-
-      {/* Footer */}
-      <motion.div className="mt-12 text-center" variants={fadeInUp}>
-        <p className="font-sans text-xs text-muted-foreground opacity-60">
-          © {new Date().getFullYear()} FZ Concept
-        </p>
-      </motion.div>
-    </motion.div>
+      </div>
+    </section>
   )
 }
