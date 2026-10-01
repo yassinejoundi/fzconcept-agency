@@ -21,12 +21,11 @@ type ContactMessage = {
 type ApiResponse = { ok: true; messages: ContactMessage[] } | { ok: false; error: string }
 type LoadResult = { ok: true; messages: ContactMessage[] } | { ok: false; unauthorized: boolean }
 
-async function requestMessages(signal?: AbortSignal): Promise<LoadResult> {
+async function requestMessages(): Promise<LoadResult> {
   try {
     const response = await fetch("/api/admin/messages", {
       headers: { Accept: "application/json" },
       cache: "no-store",
-      signal,
     })
     if (response.status === 401 || response.status === 403) return { ok: false, unauthorized: true }
     const data = (await response.json().catch(() => null)) as ApiResponse | null
@@ -95,9 +94,9 @@ export function MessagesSection() {
   }
 
   useEffect(() => {
-    const controller = new AbortController()
-    void requestMessages(controller.signal).then((result) => {
-      if (controller.signal.aborted) return
+    let active = true
+    void requestMessages().then((result) => {
+      if (!active) return
       if (!result.ok) {
         setUnauthorized(result.unauthorized)
         setStatus("error")
@@ -106,7 +105,7 @@ export function MessagesSection() {
       setMessages(result.messages)
       setStatus("ready")
     })
-    return () => controller.abort()
+    return () => { active = false }
   }, [])
 
   async function refresh() {
