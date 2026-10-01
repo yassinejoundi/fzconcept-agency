@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# local Codex settings
+/.codex/
+
 # production
 /build
 
