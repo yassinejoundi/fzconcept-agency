@@ -40,16 +40,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-The public pages run without database credentials. To use the contact form and admin inbox, create `.env.local` with your Neon values:
+The public pages run without database credentials. To use the contact form and admin inbox, copy the template and add your Neon values:
 
-```dotenv
-DATABASE_URL=
-NEON_AUTH_BASE_URL=
-NEON_AUTH_COOKIE_SECRET=
-ADMIN_EMAIL_ALLOWLIST=
+```bash
+cp .env.example .env.local
 ```
 
-`NEON_AUTH_COOKIE_SECRET` must contain at least 32 characters. `ADMIN_EMAIL_ALLOWLIST` is a comma-separated list of approved admin email addresses; an empty list denies dashboard access. Keep all secrets server-side. Set `DATABASE_URL_UNPOOLED` as well when you have a direct Neon connection for migrations.
+`NEON_AUTH_COOKIE_SECRET` must contain at least 32 characters. `ADMIN_EMAIL_ALLOWLIST` is a comma-separated list of approved admin email addresses; an empty list denies dashboard access. Keep all secrets server-side. Uncomment `DATABASE_URL_UNPOOLED` in `.env.local` when you have a direct Neon connection for migrations.
 
 Create the contact table, then provision an admin account in Neon Auth:
 
